@@ -1,0 +1,18 @@
+{
+  "name": "meeseeks",
+  "version": "1.0.0",
+  "description": "Just through Out random url",
+  "main": "index.js",
+  "dependencies": {
+    "fastify": "^4.14.1",
+    "nodemon": "^2.0.21"
+  },
+  "scripts": {
+    "start": "node index",
+    "dev": "nodemon index",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
