@@ -2,10 +2,16 @@ const fastify = require("fastify")({
   logger: true,
 });
 
-fastify.register(require("./routes/user"));
-
+fastify.register(require("@fastify/leveldb"), { name: "db" });
+fastify.register(require("@fastify/view"), {
+  engine: {
+    ejs: require("ejs"),
+  },
+});
+fastify.register(require("./routes/newuser"), { prefix: "/newuser" });
+fastify.register(require("./routes/olduser"), { prefix: "/olduser" });
 fastify.get("/", async (request, reply) => {
-  return { hello: "world" };
+  return reply.view("/templates/index.ejs");
 });
 
 const start = async () => {
