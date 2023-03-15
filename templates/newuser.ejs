@@ -1,0 +1,14 @@
+<form method="POST" action="/newuser">
+
+    <label for="username">Username:</label>
+    <input type="text" id="username" name="username" required pattern="^[a-zA-Z0-9_]{4,16}$">
+    <small>Username must be 4-16 characters long and can only contain letters, numbers, and underscores.</small>
+    <br><br>
+
+    <label for="password">Password:</label>
+    <input type="password" id="password" name="password" required
+        pattern="^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,16}$">
+    <small>Password must be at least 8 characters long and contain at least one letter and one number.</small>
+    <br><br>
+    <button type="submit">Register</button>
+</form>
