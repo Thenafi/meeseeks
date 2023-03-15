@@ -6,9 +6,9 @@
     <br><br>
 
     <label for="password">Password:</label>
-    <input type="password" id="password" name="password" required
-        pattern="^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,16}$">
-    <small>Password must be at least 8 characters long and contain at least one letter and one number.</small>
-    <br><br>
+    <input type="password" id="password" name="password" required pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{5,16}$">
+    <small>Password must be at least 5 characters long and contain at least one letter and one number. No character
+        allowed.</small>
+    <p>There is no rest option. So save it carefully❗ Password Example: Hello123, Ocean12</p>
     <button type="submit">Register</button>
 </form>

@@ -3,23 +3,6 @@ async function routes(fastify, options) {
     return reply.view("/templates/olduser.ejs");
   });
 
-  //settings page
-  fastify.get("/:username/settings", async function (req, reply) {
-    const { username } = req.params;
-    try {
-      const user = await this.level.db.get(username, { valueEncoding: "json" });
-      return reply.view("/templates/settings.ejs", {
-        username: username,
-      });
-    } catch (err) {
-      return reply.view("/templates/message.ejs", {
-        message: `User ${username} does not exist`,
-        url: "./",
-        linkText: "Go back",
-      });
-    }
-  });
-
   // foo for testing
   fastify.get("/foo", async function (req, reply) {
     const val = await this.level.db.get("foo");

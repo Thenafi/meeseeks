@@ -1,0 +1,82 @@
+<form method="POST" action="/settings/<%=username%>">
+
+    <label for="password">Password:</label>
+    <input type="password" name="password" id="password" required>
+
+    <br> <br>
+
+
+    <label for="randomness">Use randomness:</label>
+    <select name="randomness" id="randomness">
+        <option value="true">True</option>
+        <option value="false">False</option>
+    </select>
+    <small>If true then the images will render randomly. Or it will be in sequential oder.</small>
+
+    <br><br>
+
+    <label for="ttl">Time to live:</label>
+    <select name="ttl" id="ttl">
+        <option value="0">Every request</option>
+        <option value="60">Every min</option>
+        <option value="3600">Every hour</option>
+        <option value="86400">Every day</option>
+        <option value="604800">Every week</option>
+    </select>
+    <br><br>
+
+    <label for="links">Links:</label>
+    <div id="links-container">
+
+        <% for (var i=0; i < links.length; i++) { %>
+            <!-- <label for="link<%= i %>">Link <%= i+1 %>:</label> -->
+            <input type="url" name="linksList" id="link<%= i %>" required value="<%= links[i] %>">
+            <br>
+            <% } %>
+    </div>
+
+    <button type="button" id="add-link">Add link</button>
+    <br><br>
+
+
+
+    <button type="submit">Submit</button>
+</form>
+
+<script>
+    const addLinkButton = document.getElementById('add-link');
+    const linksContainer = document.getElementById('links-container');
+
+    addLinkButton.addEventListener('click', () => {
+        const input = document.createElement('input');
+        input.type = 'url';
+        input.name = 'linksList';
+        input.required = true;
+        linksContainer.appendChild(input);
+        const breakElement = document.createElement('br');
+        linksContainer.appendChild(breakElement)
+    });
+
+
+    // based on ttl value, select the correct option
+    const ttl = "<%= ttl  %>";
+    const ttlElement = document.getElementById('ttl');
+    const options = ttlElement.getElementsByTagName('option');
+    for (var i = 0; i < options.length; i++) {
+        if (options[i].value == ttl) {
+            options[i].selected = true;
+        }
+    }
+
+    // based on randomness, select the correct option
+    const random = "<%= random  %>";
+    const randomElement = document.getElementById('randomness');
+    const options2 = randomElement.getElementsByTagName('option');
+    for (var i = 0; i < options2.length; i++) {
+        if (options2[i].value == random) {
+            options2[i].selected = true;
+        }
+    }
+
+
+</script>

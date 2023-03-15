@@ -14,7 +14,7 @@ async function routes(fastify, options) {
     const schema = Joi.object({
       username: Joi.string().alphanum().min(4).max(16).required(),
       password: Joi.string()
-        .pattern(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,16}$/)
+        .pattern(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{5,16}$/)
         .required(),
     });
 
@@ -41,7 +41,6 @@ async function routes(fastify, options) {
       const defaultUser = {
         username: username,
         password: password,
-        numberOfLinks: 2,
         links: [
           "https://source.unsplash.com/random/",
           "https://source.unsplash.com/random/",

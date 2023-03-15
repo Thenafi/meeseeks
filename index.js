@@ -10,6 +10,7 @@ fastify.register(require("@fastify/view"), {
 });
 fastify.register(require("./routes/newuser"), { prefix: "/newuser" });
 fastify.register(require("./routes/olduser"), { prefix: "/olduser" });
+fastify.register(require("./routes/settings"), { prefix: "/settings" });
 fastify.get("/", async (request, reply) => {
   return reply.view("/templates/index.ejs");
 });
