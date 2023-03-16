@@ -13,7 +13,7 @@ async function routes(fastify, options) {
     // Define the validation schema
     const schema = Joi.object({
       username: Joi.string()
-        .pattern(/^[a-zA-Z0-9_]{4,16}$/)
+        .pattern(/^[a-zA-Z0-9]{4,16}$/)
         .required(),
       password: Joi.string()
         .pattern(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{5,16}$/)
@@ -60,7 +60,7 @@ async function routes(fastify, options) {
       return reply.view("/templates/message.ejs", {
         message: `User ${username} created`,
         url: "./olduser",
-        linkText: "Start Adding",
+        linkText: "Start Adding URL",
       });
     }
   });

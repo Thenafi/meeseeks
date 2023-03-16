@@ -1,4 +1,6 @@
 const joi = require("joi");
+const NodeCache = require("node-cache");
+const urlCache = new NodeCache();
 
 async function routes(fastify, options) {
   fastify.register(require("@fastify/formbody"));
@@ -61,6 +63,7 @@ async function routes(fastify, options) {
         user.ttl = ttl;
         user.random = randomness;
         await this.level.db.put(username, user, { valueEncoding: "json" });
+        urlCache.del(username);
         return reply.view("/templates/message.ejs", {
           message: `User ${username} updated`,
           url: "./",
