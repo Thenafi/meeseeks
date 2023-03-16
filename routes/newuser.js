@@ -12,7 +12,9 @@ async function routes(fastify, options) {
 
     // Define the validation schema
     const schema = Joi.object({
-      username: Joi.string().alphanum().min(4).max(16).required(),
+      username: Joi.string()
+        .pattern(/^[a-zA-Z0-9_]{4,16}$/)
+        .required(),
       password: Joi.string()
         .pattern(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{5,16}$/)
         .required(),

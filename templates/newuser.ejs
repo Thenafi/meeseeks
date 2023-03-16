@@ -2,13 +2,16 @@
 
     <label for="username">Username:</label>
     <input type="text" id="username" name="username" required pattern="^[a-zA-Z0-9_]{4,16}$">
+    <br>
     <small>Username must be 4-16 characters long and can only contain letters, numbers, and underscores.</small>
     <br><br>
 
     <label for="password">Password:</label>
     <input type="password" id="password" name="password" required pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{5,16}$">
+    <br>
     <small>Password must be at least 5 characters long and contain at least one letter and one number. No character
         allowed.</small>
+    <br><br>
     <p>There is no rest option. So save it carefully❗ Password Example: Hello123, Ocean12</p>
     <button type="submit">Register</button>
 </form>

@@ -15,7 +15,7 @@
 
     <br><br>
 
-    <label for="ttl">Time to live:</label>
+    <label for="ttl">Refresh Frequency:</label>
     <select name="ttl" id="ttl">
         <option value="0">Every request</option>
         <option value="60">Every min</option>
@@ -26,7 +26,8 @@
     <br><br>
 
     <label for="links">Links:</label>
-    <small>Number of link limit is 2 to 200</small>
+    <small>Number of link limit is 2 to 200. Current number of links: <%= links.length %></small>
+
     <div id="links-container">
 
         <% for (var i=0; i < links.length; i++) { %>
@@ -41,7 +42,7 @@
 
 
 
-    <button type="submit">Submit</button>
+    <button class="button-primary type=" submit">Update</button>
 </form>
 
 <script>
@@ -78,6 +79,13 @@
             options2[i].selected = true;
         }
     }
+
+
+
+
+
+
+
 
 
 </script>

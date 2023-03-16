@@ -1,6 +1,7 @@
 const fastify = require("fastify")({
   logger: true,
 });
+const path = require("path");
 require("dotenv").config();
 
 fastify.register(require("@fastify/view"), {
@@ -8,6 +9,10 @@ fastify.register(require("@fastify/view"), {
     ejs: require("ejs"),
   },
   layout: "/templates/layout.ejs",
+});
+fastify.register(require("@fastify/static"), {
+  root: path.join(__dirname, "static"),
+  prefix: "/static/", // optional: default '/'
 });
 fastify.register(require("@fastify/leveldb"), { name: "db" });
 fastify.register(require("./routes/newuser"), { prefix: "/newuser" });
