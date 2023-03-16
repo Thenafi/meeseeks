@@ -1,6 +1,19 @@
+const joi = require("joi");
+
 async function routes(fastify, options) {
   fastify.register(require("@fastify/formbody"));
 
+  const settingsSchema = joi.object({
+    linksList: joi.array().items(joi.string().uri()).required().min(2).max(200),
+    // joi ttl will be one 604800, 3600,60 ,86400 or 0
+    ttl: joi.number().integer().min(0).max(604800).required(),
+    randomness: joi.boolean().required(),
+    password: joi
+      .string()
+      .pattern(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{5,16}$/)
+      .required(),
+    username: joi.string().alphanum().min(4).max(16).required(),
+  });
   fastify.get("/", async (request, reply) => {
     return reply.redirect("/olduser");
   });
@@ -10,8 +23,10 @@ async function routes(fastify, options) {
     const { username } = req.params;
     try {
       let user = await this.level.db.get(username, { valueEncoding: "json" });
+      // console.log(user);
       return reply.view("/templates/settings.ejs", user);
     } catch (err) {
+      // console.log(err);
       return reply.view("/templates/message.ejs", {
         message: `User ${username} does not exist`,
         url: "./",
@@ -21,10 +36,24 @@ async function routes(fastify, options) {
   });
 
   fastify.post("/:username", async function (req, reply) {
-    console.log(req.body);
+    // console.log(req.body);
+
+    // Validate the request body
+    req.body.username = req.params.username;
+    const { error } = settingsSchema.validate(req.body);
+    if (error) {
+      console.log(error);
+      // If validation fails, display an error message
+      return reply.view("/templates/message.ejs", {
+        message: "Validation Error",
+        url: "./",
+        linkText: "Go back",
+      });
+    }
 
     const { username } = req.params;
     const { password, linksList, ttl, randomness } = req.body;
+
     try {
       let user = await this.level.db.get(username, { valueEncoding: "json" });
       if (user.password === password) {

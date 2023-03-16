@@ -51,6 +51,8 @@ async function routes(fastify, options) {
         linkText: "Go back",
       });
     } catch (err) {
+      // console.log(err);
+
       return reply.view("/templates/message.ejs", {
         message: `User ${username} does not exist`,
         url: "./",
