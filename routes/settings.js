@@ -1,4 +1,5 @@
 const joi = require("joi");
+const queryString = require("querystring");
 const urlCache = require("../utils/cache");
 
 async function routes(fastify, options) {
@@ -15,6 +16,7 @@ async function routes(fastify, options) {
       .required(),
     username: joi.string().alphanum().min(4).max(16).required(),
   });
+
   fastify.get("/", async (request, reply) => {
     return reply.redirect("/olduser");
   });
@@ -22,6 +24,14 @@ async function routes(fastify, options) {
   //settings page
   fastify.get("/:username", async function (req, reply) {
     const { username } = req.params;
+
+    // redirect from export page
+    if (req.query.userJson) {
+      const userJson = JSON.parse(req.query.userJson);
+
+      return reply.view("/templates/settings.ejs", userJson);
+    }
+    // basic settings
     try {
       let user = await this.level.db.get(username, { valueEncoding: "json" });
       // console.log(user);
@@ -57,7 +67,7 @@ async function routes(fastify, options) {
 
     try {
       let user = await this.level.db.get(username, { valueEncoding: "json" });
-      if (fastify.bcrypt.compareSync(password, user.password)) {
+      if (fastify.bcrypt.compare(password, user.password)) {
         user.links = [...new Set(linksList)];
         user.ttl = ttl;
         user.random = randomness;

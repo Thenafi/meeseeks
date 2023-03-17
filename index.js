@@ -19,6 +19,7 @@ fastify.register(require("fastify-bcrypt"), {
 });
 fastify.register(require("@fastify/leveldb"), { name: "db" });
 fastify.register(require("./routes/wish"), { prefix: "/wish" });
+fastify.register(require("./routes/imex"), { prefix: "/imex" });
 fastify.register(require("./routes/newuser"), { prefix: "/newuser" });
 fastify.register(require("./routes/olduser"), { prefix: "/olduser" });
 fastify.register(require("./routes/settings"), { prefix: "/settings" });
