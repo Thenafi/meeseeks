@@ -1,5 +1,4 @@
-const NodeCache = require("node-cache");
-const urlCache = new NodeCache();
+const urlCache = require("../utils/cache");
 
 function getRandomNumberExcluding(excludedNumber, maxNumber) {
   let randomNumber = Math.floor(Math.random() * maxNumber);
@@ -26,6 +25,8 @@ async function routes(fastify, options) {
       console.log("In cache");
       reply.redirect(307, userCacheLink);
     } else {
+      console.log("Not in cache");
+
       let link;
       const user = await fastify.level.db.get(username, {
         valueEncoding: "json",
@@ -58,7 +59,7 @@ async function routes(fastify, options) {
           valueEncoding: "json",
         });
       }
-      if (user.ttl > 0) {
+      if (parseInt(user.ttl) > 0) {
         console.log("Caching", user.ttl);
         urlCache.set(username, link, parseInt(user.ttl));
       }

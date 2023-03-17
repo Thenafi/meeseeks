@@ -1,6 +1,5 @@
 const joi = require("joi");
-const NodeCache = require("node-cache");
-const urlCache = new NodeCache();
+const urlCache = require("../utils/cache");
 
 async function routes(fastify, options) {
   fastify.register(require("@fastify/formbody"));
