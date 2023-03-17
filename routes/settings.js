@@ -58,7 +58,7 @@ async function routes(fastify, options) {
     try {
       let user = await this.level.db.get(username, { valueEncoding: "json" });
       if (user.password === password) {
-        user.links = linksList;
+        user.links = [...new Set(linksList)];
         user.ttl = ttl;
         user.random = randomness;
         await this.level.db.put(username, user, { valueEncoding: "json" });

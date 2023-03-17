@@ -1,4 +1,5 @@
 const urlCache = require("../utils/cache");
+const helpers = require("../utils/helpers");
 
 function getRandomNumberExcluding(excludedNumber, maxNumber) {
   let randomNumber = Math.floor(Math.random() * maxNumber);
@@ -31,8 +32,7 @@ async function routes(fastify, options) {
       const user = await fastify.level.db.get(username, {
         valueEncoding: "json",
       });
-
-      if (Boolean(user.random) === true) {
+      if (helpers.convertToBoolean(user.random) === true) {
         // get a random number in between 0 and the length of the links array
         const randomIndex = getRandomNumberExcluding(
           user.lastIndex,
@@ -46,6 +46,8 @@ async function routes(fastify, options) {
           valueEncoding: "json",
         });
       } else {
+        console.log("Not random", user.lastIndex);
+
         // get the next link from the links array
         user.lastIndex++;
         console.log(user.lastIndex);
