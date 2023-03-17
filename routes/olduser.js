@@ -22,7 +22,7 @@ async function routes(fastify, options) {
     try {
       const user = await this.level.db.get(username, { valueEncoding: "json" });
 
-      if (user.password !== password) {
+      if (fastify.bcrypt.compare(password, user.password) === false) {
         return reply.view("/templates/message.ejs", {
           message: `Password for ${username} is incorrect`,
           url: "./olduser",
@@ -30,6 +30,7 @@ async function routes(fastify, options) {
         });
       }
       // console.log(user);
+      delete user.password;
       return reply.send(user);
     } catch (err) {
       console.log(err);

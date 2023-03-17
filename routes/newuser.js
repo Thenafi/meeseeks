@@ -26,7 +26,7 @@ async function routes(fastify, options) {
     if (error) {
       // If validation fails, display an error message
       return reply.view("/templates/message.ejs", {
-        message: "Invalid form data",
+        message: "Invalid form data.",
         url: "./",
         linkText: "Go back",
       });
@@ -42,10 +42,14 @@ async function routes(fastify, options) {
     } catch (err) {
       const defaultUser = {
         username: username,
-        password: password,
+        password: await fastify.bcrypt.hash(password),
         links: [
-          "https://source.unsplash.com/random/",
-          "https://source.unsplash.com/random/",
+          "https://source.unsplash.com/random/900x900/?sky",
+          "https://source.unsplash.com/random/900x900/?car",
+          "https://picsum.photos/900",
+          `https://rickandmortyapi.com/api/character/avatar/${Math.floor(
+            Math.random() * 800
+          )}.jpeg`,
         ],
         lastIndex: 0,
         ttl: 0,

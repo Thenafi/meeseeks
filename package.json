@@ -11,6 +11,7 @@
     "dotenv": "^16.0.3",
     "ejs": "^3.1.9",
     "fastify": "^4.14.1",
+    "fastify-bcrypt": "^1.0.1",
     "joi": "^17.8.4",
     "level-export": "^0.1.0",
     "node-cache": "^5.1.2",
