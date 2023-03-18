@@ -1,31 +1,9 @@
-let fastify;
+const fastify = require("fastify")({
+  logger: true,
+});
 
 const path = require("path");
 require("dotenv").config();
-const fs = require("fs");
-if (process.env.NODE_ENV === "development") {
-  fastify = require("fastify")({
-    logger: true,
-    logger: {
-      level: "info",
-      file: "./sys.txt", // Will use pino.destination()
-    },
-  });
-}
-
-if (process.env.NODE_ENV === "production") {
-  fastify = require("fastify")({
-    https: {
-      key: fs.readFileSync(path.resolve(__dirname, "./yourSSL.key")),
-      cert: fs.readFileSync(path.resolve(__dirname, "./yourSSL.cert")),
-    },
-    logger: {
-      level: "info",
-      file: "./sys.txt", // Will use pino.destination()
-    },
-  });
-  fastify.register(httpsRedirect);
-}
 
 fastify.register(require("@fastify/view"), {
   engine: {
