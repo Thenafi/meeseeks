@@ -1,40 +1,29 @@
-const fastify = require("fastify")({
-  logger: true,
-});
-
+const express = require("express");
+const app = express();
 const path = require("path");
+const morgan = require("morgan");
+const expressLayouts = require("express-ejs-layouts");
 require("dotenv").config();
 
-fastify.register(require("@fastify/view"), {
-  engine: {
-    ejs: require("ejs"),
-  },
-  layout: "/templates/layout.ejs",
-});
-fastify.register(require("@fastify/static"), {
-  root: path.join(__dirname, "static"),
-  prefix: "/static/", // optional: default '/'
-});
-fastify.register(require("fastify-bcrypt"), {
-  saltWorkFactor: 8,
-});
-fastify.register(require("@fastify/leveldb"), { name: "db" });
-fastify.register(require("./routes/wish"), { prefix: "/wish" });
-fastify.register(require("./routes/imex"), { prefix: "/imex" });
-fastify.register(require("./routes/newuser"), { prefix: "/newuser" });
-fastify.register(require("./routes/olduser"), { prefix: "/olduser" });
-fastify.register(require("./routes/settings"), { prefix: "/settings" });
+const port = process.env.PORT || 80;
 
-fastify.get("/", async (request, reply) => {
-  return reply.view("/templates/index.ejs");
+app.set("views", path.join(__dirname, "templates"));
+app.set("view engine", "ejs");
+app.use(expressLayouts);
+app.use("/static", express.static(path.join(__dirname, "static")));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(morgan("dev"));
+app.use("/wish", require("./routes/wish"));
+app.use("/imex", require("./routes/imex"));
+app.use("/newuser", require("./routes/newuser"));
+app.use("/olduser", require("./routes/olduser"));
+app.use("/settings", require("./routes/settings"));
+
+app.get("/", (req, res) => {
+  res.render("index");
 });
 
-const start = async () => {
-  try {
-    await fastify.listen({ port: process.env.PORT || 80, host: "0.0.0.0" });
-  } catch (err) {
-    fastify.log.error(err);
-    process.exit(1);
-  }
-};
-start();
+app.listen(port, () => {
+  console.log(`Server started on port ${port}`);
+});

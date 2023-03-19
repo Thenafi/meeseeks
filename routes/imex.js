@@ -1,44 +1,45 @@
 const queryString = require("querystring");
+const express = require("express");
+const db = require("../utils/db");
+const router = express.Router();
 
-//import and export route
-async function routes(fastify, options) {
-  fastify.register(require("@fastify/formbody"));
+router.use(require("body-parser").urlencoded({ extended: true }));
 
-  fastify.get("/", async (request, reply) => {
-    return reply.view("/templates/imex.ejs");
-  });
+router.get("/", async (req, res) => {
+  return res.render("imex");
+});
 
-  fastify.post("/", async function (request, reply) {
-    const { importedUser, exportedUser } = request.body;
+router.post("/", async function (req, res) {
+  const { importedUser, exportedUser } = req.body;
 
-    // validate both input exists
-    if (importedUser && exportedUser) {
-      // validate both use exists in the database
-      try {
-        const importedUserInDB = await this.level.db.get(importedUser, {
-          valueEncoding: "json",
-        });
-        const exportedUserInDB = await this.level.db.get(exportedUser, {
-          valueEncoding: "json",
-        });
+  // validate both input exists
+  if (importedUser && exportedUser) {
+    // validate both use exists in the database
+    try {
+      const importedUserInDB = await db.get(importedUser, {
+        valueEncoding: "json",
+      });
+      const exportedUserInDB = await db.get(exportedUser, {
+        valueEncoding: "json",
+      });
 
-        delete importedUserInDB.password;
-        importedUserInDB.username = exportedUserInDB.username;
-        console.log(importedUserInDB);
-        const query = queryString.stringify({
-          userJson: JSON.stringify(importedUserInDB),
-        });
+      delete importedUserInDB.password;
+      importedUserInDB.username = exportedUserInDB.username;
+      console.log(importedUserInDB);
+      const query = queryString.stringify({
+        userJson: JSON.stringify(importedUserInDB),
+      });
 
-        reply.redirect(`/settings/${exportedUser}?${query}`);
-      } catch (err) {
-        console.log(err);
-        return reply.view("/templates/message.ejs", {
-          message: `User ${importedUser}  or ${exportedUser}  does not exist`,
-          url: "./",
-          linkText: "Go back",
-        });
-      }
+      res.redirect(`/settings/${exportedUser}?${query}`);
+    } catch (err) {
+      console.log(err);
+      return res.render("message", {
+        message: `User ${importedUser} or ${exportedUser} does not exist`,
+        url: "./",
+        linkText: "Go back",
+      });
     }
-  });
-}
-module.exports = routes;
+  }
+});
+
+module.exports = router;

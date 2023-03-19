@@ -1,66 +1,56 @@
-async function routes(fastify, options) {
-  fastify.get("/", async (request, reply) => {
-    return reply.view("/templates/olduser.ejs");
-  });
+const bcrypt = require("bcrypt");
+const express = require("express");
+const db = require("../utils/db");
+const router = express.Router();
 
-  // foo for testing
-  fastify.get("/foo", async function (req, reply) {
-    const val = await this.level.db.get("foo");
-    const val4 = await this.level.db.put("foo3", "sd");
-    try {
-      const val3 = await this.level.db.get("foo3");
-      return val3;
-    } catch (err) {
-      console.log(err);
-      return 1;
-    }
-  });
+router.get("/", async (req, res) => {
+  return res.render("olduser");
+});
 
-  //get all user data
-  fastify.get("/:username/:password", async function (req, reply) {
-    const { username, password } = req.params;
-    try {
-      const user = await this.level.db.get(username, { valueEncoding: "json" });
+//get all user data
+router.get("/:username/:password", async function (req, res) {
+  const { username, password } = req.params;
+  try {
+    const user = await db.get(username, { valueEncoding: "json" });
 
-      if (fastify.bcrypt.compare(password, user.password) === false) {
-        return reply.view("/templates/message.ejs", {
-          message: `Password for ${username} is incorrect`,
-          url: "./olduser",
-          linkText: "Go back",
-        });
-      }
-      // console.log(user);
-      delete user.password;
-      return reply.send(user);
-    } catch (err) {
-      console.log(err);
-      return reply.view("/templates/message.ejs", {
-        message: `User ${username} does not exist`,
+    if ((await bcrypt.compare(password, user.password)) === false) {
+      return res.render("message", {
+        message: `Password for ${username} is incorrect`,
         url: "./olduser",
         linkText: "Go back",
       });
     }
-  });
+    // console.log(user);
+    delete user.password;
+    return res.send(user);
+  } catch (err) {
+    console.log(err);
+    return res.render("message", {
+      message: `User ${username} does not exist`,
+      url: "./olduser",
+      linkText: "Go back",
+    });
+  }
+});
 
-  fastify.get("/:username", async function (req, reply) {
-    const { username } = req.params;
-    try {
-      const user = await this.level.db.get(username, { valueEncoding: "json" });
-      return reply.view("/templates/message.ejs", {
-        message: `User ${username} exists. To get all details  as json, add /password to the end of the url`,
-        url: `./`,
-        linkText: "Go back",
-      });
-    } catch (err) {
-      // console.log(err);
+router.get("/:username", async function (req, res) {
+  const { username } = req.params;
+  try {
+    const user = await db.get(username, { valueEncoding: "json" });
+    return res.render("message", {
+      message: `User ${username} exists. To get all details  as json, add /password to the end of the url`,
+      url: `./`,
+      linkText: "Go back",
+    });
+  } catch (err) {
+    // console.log(err);
 
-      return reply.view("/templates/message.ejs", {
-        message: `User ${username} does not exist`,
-        url: "./",
-        linkText: "Go back",
-      });
-    }
-  });
-}
+    return res.render("message", {
+      message: `User ${username} does not exist`,
+      url: "./",
+      linkText: "Go back",
+    });
+  }
+});
 
-module.exports = routes;
+module.exports = router;
