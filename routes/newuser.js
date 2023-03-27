@@ -6,6 +6,16 @@ async function routes(fastify, options) {
   const userCollection = fastify.mongo.db.collection("users");
 
   fastify.get("/", async (request, reply) => {
+    if (
+      process.env.USER_LIMIT &&
+      process.env.USER_LIMIT < (await userCollection.count())
+    ) {
+      return reply.view("/templates/message.ejs", {
+        message: `User limit reached. Please contact admin`,
+        url: "./",
+        linkText: "Go back",
+      });
+    }
     return reply.view("/templates/newuser.ejs", {
       usernameRegex: newUserSettingsSchema.properties.username.pattern,
       passwordRegex: newUserSettingsSchema.properties.password.pattern,
@@ -16,6 +26,17 @@ async function routes(fastify, options) {
     schema: { body: { $ref: "newUserSettingsSchema" } },
 
     async handler(request, reply) {
+      if (
+        process.env.USER_LIMIT &&
+        process.env.USER_LIMIT < (await userCollection.count())
+      ) {
+        return reply.view("/templates/message.ejs", {
+          message: `User limit reached. Please contact admin`,
+          url: "./",
+          linkText: "Go back",
+        });
+      }
+
       const { username, password } = request.body;
 
       try {
