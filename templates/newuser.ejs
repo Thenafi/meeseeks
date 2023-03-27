@@ -1,23 +1,24 @@
 <form method="POST" action="/newuser">
 
     <label for="username">Username:</label>
-    <input type="text" id="username" name="username" required pattern="^[a-zA-Z0-9]{4,16}$">
+    <input type="text" id="username" name="username" required pattern="<%= usernameRegex %>">
     <br>
-    <small>Username must be 4-16 characters long and can only contain letters and numbers.</small>
+    <small>Username must be between 5 and 16 characters long, contains only letters &numbers and starts with a
+        letter</small>
     <br><br>
 
     <label for="password">Password:</label>
-    <input type="password" id="password" name="password" required pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{5,16}$">
+    <input type="password" id="password" name="password" required pattern=" <%= passwordRegex %>">
     <button type="button" onclick="showPassword()">Show Password</button>
     <br>
-    <small>Password must be at least 5 characters long and contain at least one letter and one number. No character
-        allowed.</small>
+    <small>Password must be between 5 and 16 characters long and can contain letters, numbers, and special characters !
+        @ # $ % ^ & * ( ) _ + {} [] |.</small>
     <br><br>
-    <p>There is no rest option. So save it carefully❗ Password Example: Hello123, Ocean12</p>
+    <p style="color: brown;">There is no rest option. So save your profile carefully carefully!</p>
     <button type="submit">Register</button>
 </form>
 
-<!-- add a button to show password -->
+<!-- showing password -->
 <script>
     function showPassword() {
         var x = document.getElementById("password");

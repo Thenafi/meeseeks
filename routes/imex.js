@@ -62,6 +62,12 @@ async function routes(fastify, options) {
           linkText: "Go back",
         });
       }
+    } else {
+      return reply.view("/templates/message.ejs", {
+        message: `Both users must be filled`,
+        url: "./",
+        linkText: "Go back",
+      });
     }
   });
 }

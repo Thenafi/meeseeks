@@ -3,6 +3,7 @@ async function routes(fastify, options) {
     return reply.view("/templates/olduser.ejs");
   });
 
+  //fix the function
   fastify.get("/:username", async function (req, reply) {
     const userCollection = this.mongo.db.collection("users");
     const { username } = req.params;

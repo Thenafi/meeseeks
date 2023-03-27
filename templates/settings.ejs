@@ -1,11 +1,5 @@
 <form method="POST" action="/settings/<%=username%>">
 
-    <label for="password">Password:</label>
-    <input type="password" name="password" id="password" required>
-
-    <br> <br>
-
-
     <label for="randomness">Use randomness:</label>
     <select name="randomness" id="randomness">
         <option value="true">True</option>
@@ -40,7 +34,8 @@
     <button type="button" id="add-link">Add link</button>
     <br><br>
 
-
+    <label for="password">Password:</label>
+    <input type="password" name="password" id="password" required pattern="<%= passwordRegex %>">
 
     <button class="button-primary type=" submit">Update</button>
 </form>
