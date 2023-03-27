@@ -3,59 +3,30 @@ async function routes(fastify, options) {
     return reply.view("/templates/olduser.ejs");
   });
 
-  // foo for testing
-  fastify.get("/foo", async function (req, reply) {
-    const val = await this.level.db.get("foo");
-    const val4 = await this.level.db.put("foo3", "sd");
-    try {
-      const val3 = await this.level.db.get("foo3");
-      return val3;
-    } catch (err) {
-      console.log(err);
-      return 1;
-    }
-  });
+  fastify.get("/:username", async function (req, reply) {
+    const userCollection = this.mongo.db.collection("users");
+    const { username } = req.params;
 
-  //get all user data
-  fastify.get("/:username/:password", async function (req, reply) {
-    const { username, password } = req.params;
     try {
-      const user = await this.level.db.get(username, { valueEncoding: "json" });
-
-      if (fastify.bcrypt.compare(password, user.password) === false) {
+      const user = await userCollection.findOne({ username: username });
+      if (user) {
         return reply.view("/templates/message.ejs", {
-          message: `Password for ${username} is incorrect`,
-          url: "./olduser",
+          message: `User ${username} exists. To get all details  as json, add /password to the end of the url`,
+          url: `./`,
+          linkText: "Go back",
+        });
+      } else {
+        return reply.view("/templates/message.ejs", {
+          message: `User ${username} does not exist`,
+          url: `./`,
           linkText: "Go back",
         });
       }
-      // console.log(user);
-      delete user.password;
-      return reply.send(user);
     } catch (err) {
       console.log(err);
-      return reply.view("/templates/message.ejs", {
-        message: `User ${username} does not exist`,
-        url: "./olduser",
-        linkText: "Go back",
-      });
-    }
-  });
-
-  fastify.get("/:username", async function (req, reply) {
-    const { username } = req.params;
-    try {
-      const user = await this.level.db.get(username, { valueEncoding: "json" });
-      return reply.view("/templates/message.ejs", {
-        message: `User ${username} exists. To get all details  as json, add /password to the end of the url`,
-        url: `./`,
-        linkText: "Go back",
-      });
-    } catch (err) {
-      // console.log(err);
 
       return reply.view("/templates/message.ejs", {
-        message: `User ${username} does not exist`,
+        message: "Internal server error. Report admin",
         url: "./",
         linkText: "Go back",
       });

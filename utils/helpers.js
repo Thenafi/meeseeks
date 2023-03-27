@@ -12,4 +12,16 @@ const convertToBoolean = (string) => {
     return false;
   }
 };
-module.exports = { convertToBoolean: convertToBoolean };
+
+function getRandomNumberExcluding(excludedNumber, maxNumber) {
+  let randomNumber = Math.floor(Math.random() * maxNumber);
+  while (randomNumber === excludedNumber) {
+    randomNumber = Math.floor(Math.random() * maxNumber);
+  }
+  return randomNumber;
+}
+
+module.exports = {
+  convertToBoolean: convertToBoolean,
+  getRandomNumberExcluding: getRandomNumberExcluding,
+};

@@ -1,8 +1,9 @@
 const joi = require("joi");
 const queryString = require("querystring");
 const urlCache = require("../utils/cache");
-
+const { convertToBoolean } = require("../utils/helpers");
 async function routes(fastify, options) {
+  const userCollection = fastify.mongo.db.collection("users");
   fastify.register(require("@fastify/formbody"));
 
   const settingsSchema = joi.object({
@@ -28,18 +29,31 @@ async function routes(fastify, options) {
     // redirect from export page
     if (req.query.userJson) {
       const userJson = JSON.parse(req.query.userJson);
-
       return reply.view("/templates/settings.ejs", userJson);
     }
     // basic settings
     try {
-      let user = await this.level.db.get(username, { valueEncoding: "json" });
-      // console.log(user);
-      return reply.view("/templates/settings.ejs", user);
+      const user = await userCollection.findOne(
+        { username: username },
+        {
+          projection: { password: 0, _id: 0 },
+        }
+      );
+      console.log(user);
+      if (user) {
+        return reply.view("/templates/settings.ejs", user);
+      } else {
+        return reply.view("/templates/message.ejs", {
+          message: `User ${username} does not exist`,
+          url: "./",
+          linkText: "Go back",
+        });
+      }
     } catch (err) {
-      // console.log(err);
+      console.log(err);
+
       return reply.view("/templates/message.ejs", {
-        message: `User ${username} does not exist`,
+        message: `Server error. Report to admin`,
         url: "./",
         linkText: "Go back",
       });
@@ -47,8 +61,6 @@ async function routes(fastify, options) {
   });
 
   fastify.post("/:username", async function (req, reply) {
-    // console.log(req.body);
-
     // Validate the request body
     req.body.username = req.params.username;
     const { error } = settingsSchema.validate(req.body);
@@ -66,12 +78,21 @@ async function routes(fastify, options) {
     const { password, linksList, ttl, randomness } = req.body;
 
     try {
-      let user = await this.level.db.get(username, { valueEncoding: "json" });
-      if (fastify.bcrypt.compare(password, user.password)) {
+      const user = await userCollection.findOne({ username: username });
+      if (!user) {
+        return reply.view("/templates/message.ejs", {
+          message: `User ${username} does not exist`,
+          url: "./",
+          linkText: "Go back",
+        });
+      }
+
+      if (await fastify.bcrypt.compare(password, user.password)) {
         user.links = [...new Set(linksList)];
-        user.ttl = ttl;
-        user.random = randomness;
-        await this.level.db.put(username, user, { valueEncoding: "json" });
+        user.ttl = parseInt(ttl);
+        user.random = convertToBoolean(randomness);
+        await userCollection.updateOne({ username: username }, { $set: user });
+
         urlCache.del(username);
         return reply.view("/templates/message.ejs", {
           message: `User ${username} updated`,
@@ -88,7 +109,7 @@ async function routes(fastify, options) {
     } catch (err) {
       console.log(err);
       return reply.view("/templates/message.ejs", {
-        message: `User ${username} does not exist`,
+        message: `Server error. Report to admin`,
         url: "./",
         linkText: "Go back",
       });

@@ -2,6 +2,7 @@ const queryString = require("querystring");
 
 //import and export route
 async function routes(fastify, options) {
+  const userCollection = fastify.mongo.db.collection("users");
   fastify.register(require("@fastify/formbody"));
 
   fastify.get("/", async (request, reply) => {
@@ -15,14 +16,37 @@ async function routes(fastify, options) {
     if (importedUser && exportedUser) {
       // validate both use exists in the database
       try {
-        const importedUserInDB = await this.level.db.get(importedUser, {
-          valueEncoding: "json",
-        });
-        const exportedUserInDB = await this.level.db.get(exportedUser, {
-          valueEncoding: "json",
-        });
+        const projection = { projection: { password: 0, _id: 0 } };
+        const importedUserInDB = await userCollection.findOne(
+          {
+            username: importedUser,
+          },
+          projection
+        );
+        const exportedUserInDB = await userCollection.findOne(
+          {
+            username: exportedUser,
+          },
+          projection
+        );
 
-        delete importedUserInDB.password;
+        // check users exists
+        if (!importedUserInDB || !exportedUserInDB) {
+          return reply.view("/templates/message.ejs", {
+            message: `User ${importedUser}  or ${exportedUser}  does not exist`,
+            url: "./",
+            linkText: "Go back",
+          });
+        }
+        // validate both users are not the same
+        if (importedUserInDB.username === exportedUserInDB.username) {
+          return reply.view("/templates/message.ejs", {
+            message: `User ${importedUser}  and ${exportedUser}  are the same`,
+            url: "./",
+            linkText: "Go back",
+          });
+        }
+
         importedUserInDB.username = exportedUserInDB.username;
         console.log(importedUserInDB);
         const query = queryString.stringify({
@@ -33,7 +57,7 @@ async function routes(fastify, options) {
       } catch (err) {
         console.log(err);
         return reply.view("/templates/message.ejs", {
-          message: `User ${importedUser}  or ${exportedUser}  does not exist`,
+          message: `Internal server error. Report admin`,
           url: "./",
           linkText: "Go back",
         });

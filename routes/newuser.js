@@ -33,20 +33,24 @@ async function routes(fastify, options) {
     }
 
     try {
-      const user = await this.level.db.get(username);
-      return reply.view("/templates/message.ejs", {
-        message: `User ${username} already exists`,
-        url: "./newuser",
-        linkText: "Go back",
-      });
-    } catch (err) {
-      const defaultUser = {
+      const userCollection = this.mongo.db.collection("users");
+      const user = await userCollection.findOne({ username: username });
+      if (user) {
+        console.log(user);
+        return reply.view("/templates/message.ejs", {
+          message: `User ${username} already exists`,
+          url: "./newuser",
+          linkText: "Go back",
+        });
+      }
+
+      const newUser = {
         username: username,
         password: await fastify.bcrypt.hash(password),
         links: [
-          "https://source.unsplash.com/random/900x900/?sky",
-          "https://source.unsplash.com/random/900x900/?car",
-          "https://picsum.photos/900",
+          "https://rickandmortyapi.com/api/character/avatar/1.jpeg",
+          "https://rickandmortyapi.com/api/character/avatar/2.jpeg",
+          "https://rickandmortyapi.com/api/character/avatar/3.jpeg",
           `https://rickandmortyapi.com/api/character/avatar/${Math.floor(
             Math.random() * 800
           )}.jpeg`,
@@ -55,16 +59,18 @@ async function routes(fastify, options) {
         ttl: 0,
         random: true,
       };
-
-      //put the user in the database with the default values as json
-      await this.level.db.put(username, defaultUser, {
-        valueEncoding: "json",
-      });
-
+      await userCollection.insertOne(newUser);
       return reply.view("/templates/message.ejs", {
         message: `User ${username} created`,
         url: "./olduser",
         linkText: "Start Adding URL",
+      });
+    } catch (err) {
+      console.log(err);
+      return reply.view("/templates/message.ejs", {
+        message: "Internal server error. Report admin",
+        url: "./",
+        linkText: "Go back",
       });
     }
   });
