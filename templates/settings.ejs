@@ -1,4 +1,8 @@
 <form method="POST" action="/settings/<%=username%>">
+    <label for="password">Password:</label>
+    <input type="password" name="password" id="password" required pattern="<%=passwordRegex%>">
+
+    <br> <br>
 
     <label for="randomness">Use randomness:</label>
     <select name="randomness" id="randomness">
@@ -10,6 +14,7 @@
     <br><br>
 
     <label for="ttl">Refresh Frequency:</label>
+    <small> How often you want your image to be refreshed.</small>
     <select name="ttl" id="ttl">
         <option value="0">Every request</option>
         <option value="60">Every min</option>
@@ -21,6 +26,9 @@
 
     <label for="links">Links:</label>
     <small>Number of link limit is 2 to 200. Current number of links: <%= links.length %></small>
+    <br>
+    <small>To remove link - just replace any existing link with the link you want to be removed. More about this in FAQ
+        section. </small>
 
     <div id="links-container">
 
@@ -35,8 +43,7 @@
     <button type="button" id="add-link">Add link</button>
     <br><br>
 
-    <label for="password">Password:</label>
-    <input type="password" name="password" id="password" required pattern="<%= passwordRegex %>">
+
 
     <button class="button-primary type=" submit">Update</button>
 </form>
@@ -49,6 +56,9 @@
         const input = document.createElement('input');
         input.type = 'url';
         input.name = 'linksList';
+        input.id = 'link' + linksContainer.getElementsByTagName('input').length;
+        input.maxLength = "<%=  maxUrlLength %>"
+        input.style.width = '100%'
         input.required = true;
         linksContainer.appendChild(input);
         const breakElement = document.createElement('br');

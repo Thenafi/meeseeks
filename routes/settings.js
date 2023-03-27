@@ -15,19 +15,18 @@ async function routes(fastify, options) {
   fastify.get("/:username", async function (req, reply) {
     const { username } = req.params;
 
-    // redirect from export page
-    if (req.query.userJson) {
-      const userJson = JSON.parse(req.query.userJson);
-      return reply.view("/templates/settings.ejs", userJson);
-    }
-    // basic settings
     try {
-      const user = await userCollection.findOne(
-        { username: username },
-        {
-          projection: { password: 0, _id: 0 },
-        }
-      );
+      let user;
+      if (req.query.userJson) {
+        user = JSON.parse(req.query.userJson);
+      } else {
+        user = await userCollection.findOne(
+          { username: username },
+          {
+            projection: { password: 0, _id: 0 },
+          }
+        );
+      }
       if (user) {
         user.passwordRegex = settingsSchema.properties.password.pattern;
         user.maxUrlLength = settingsSchema.properties.linksList.items.maxLength;
@@ -59,7 +58,10 @@ async function routes(fastify, options) {
       const { password, linksList, ttl, randomness } = req.body;
 
       try {
-        const user = await userCollection.findOne({ username: username });
+        const user = await userCollection.findOne(
+          { username: username },
+          { projection: { _id: 0 } }
+        );
         if (!user) {
           return reply.view("/templates/message.ejs", {
             message: `User ${username} does not exist`,
@@ -69,13 +71,22 @@ async function routes(fastify, options) {
         }
 
         if (await fastify.bcrypt.compare(password, user.password)) {
-          user.links = [...new Set(linksList)];
+          let validLinksList = [...new Set(linksList)];
+          if (validLinksList.length <= 1)
+            validLinksList.push(
+              `https://rickandmortyapi.com/api/character/avatar/${Math.floor(
+                Math.random() * 800
+              )}.jpeg`
+            );
+
+          user.links = validLinksList;
           user.ttl = parseInt(ttl);
           user.random = convertToBoolean(randomness);
           await userCollection.updateOne(
             { username: username },
             { $set: user }
           );
+
           //deleting cache to clear up old data like resetting
           urlCache.del(username);
 
