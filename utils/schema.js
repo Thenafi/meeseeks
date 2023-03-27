@@ -28,6 +28,7 @@ const settingsSchema = {
       items: {
         type: "string",
         format: "uri",
+        maxLength: 700,
       },
       minItems: 2,
       maxItems: 200,

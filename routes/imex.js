@@ -47,8 +47,8 @@ async function routes(fastify, options) {
           });
         }
 
+        // the main import process by simply exchanging the username of the imported user with the exported user so the data is imported to the exported user
         importedUserInDB.username = exportedUserInDB.username;
-        console.log(importedUserInDB);
         const query = queryString.stringify({
           userJson: JSON.stringify(importedUserInDB),
         });

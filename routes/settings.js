@@ -30,6 +30,7 @@ async function routes(fastify, options) {
       );
       if (user) {
         user.passwordRegex = settingsSchema.properties.password.pattern;
+        user.maxUrlLength = settingsSchema.properties.linksList.items.maxLength;
         return reply.view("/templates/settings.ejs", user);
       } else {
         return reply.view("/templates/message.ejs", {
@@ -75,9 +76,9 @@ async function routes(fastify, options) {
             { username: username },
             { $set: user }
           );
-          //deleting cache to clear up old data like resetting 
+          //deleting cache to clear up old data like resetting
           urlCache.del(username);
-          
+
           return reply.view("/templates/message.ejs", {
             message: `User ${username} updated`,
             url: "./",
