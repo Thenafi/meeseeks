@@ -63,6 +63,8 @@ async function routes(fastify, options) {
           lastIndex: 0,
           ttl: 0,
           random: true,
+          userCreated: new Date(), // if you need cleanup users
+          lastUpdated: new Date(),
         };
         await userCollection.insertOne(newUser);
         return reply.view("/templates/message.ejs", {
@@ -70,13 +72,21 @@ async function routes(fastify, options) {
           url: "./olduser",
           linkText: "Start Adding URL",
         });
-      } catch (err) {
-        console.log(err);
-        return reply.view("/templates/message.ejs", {
-          message: "Internal server error. Report admin",
-          url: "./",
-          linkText: "Go back",
-        });
+      } catch (error) {
+        if (error.name === "MongoError" && error.code === 11000) {
+          return reply.view("/templates/message.ejs", {
+            message: `User ${username} already exists`,
+            url: "./newuser",
+            linkText: "Go back",
+          });
+        } else {
+          console.log(err);
+          return reply.view("/templates/message.ejs", {
+            message: "Internal server error. Report admin",
+            url: "./",
+            linkText: "Go back",
+          });
+        }
       }
     },
   });

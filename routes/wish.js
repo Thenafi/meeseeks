@@ -1,5 +1,5 @@
 const urlCache = require("../utils/cache");
-const { getRandomNumberExcluding } = require("../utils/helpers");
+const { getRandomNumberExcluding, isTimeExpired } = require("../utils/helpers");
 
 async function routes(fastify, options) {
   const userCollection = fastify.mongo.db.collection("users");
@@ -19,6 +19,7 @@ async function routes(fastify, options) {
     if (userCacheLink !== undefined) {
       console.log("In cache");
       reply.redirect(307, userCacheLink);
+      return;
     } else {
       console.log("Not in cache");
 
@@ -30,6 +31,8 @@ async function routes(fastify, options) {
           projection: { password: 0, _id: 0 },
         }
       );
+
+      //to check for existing user
       if (!user) {
         return reply.view("/templates/message.ejs", {
           message: `User ${username} does not exist`,
@@ -38,20 +41,34 @@ async function routes(fastify, options) {
         });
       }
 
+      if (
+        parseInt(user.ttl) > 0 &&
+        !isTimeExpired(user.ttl, user.lastUpdated)
+      ) {
+        console.log(
+          "In ttl",
+          user.ttl,
+          user.lastUpdated,
+          isTimeExpired(user.ttl, user.lastUpdated)
+        );
+        reply.redirect(307, user.links[user.lastIndex]);
+        urlCache.set(username, user.links[user.lastIndex], parseInt(user.ttl));
+
+        return;
+      }
+      console.log("Not in ttl", user.ttl, user.lastUpdated);
       if (user.random === true) {
-        // get a random number in between 0 and the length of the links array
         const randomIndex = getRandomNumberExcluding(
           user.lastIndex,
           user.links.length
         );
-        // get the link from the links array
+
         link = user.links[randomIndex];
         reply.redirect(307, link);
         lastIndex = randomIndex;
       } else {
         // console.log("Not random", user.lastIndex);
 
-        // get the next link from the links array
         lastIndex = user.lastIndex + 1;
         if (lastIndex >= user.links.length) {
           lastIndex = 0;
@@ -62,7 +79,7 @@ async function routes(fastify, options) {
 
       await userCollection.updateOne(
         { username: username },
-        { $set: { lastIndex: lastIndex } }
+        { $set: { lastIndex: lastIndex, lastUpdated: new Date() } }
       );
       if (parseInt(user.ttl) > 0) {
         console.log("Caching", user.ttl);

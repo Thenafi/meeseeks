@@ -82,6 +82,7 @@ async function routes(fastify, options) {
           user.links = validLinksList;
           user.ttl = parseInt(ttl);
           user.random = convertToBoolean(randomness);
+          user.lastUpdated = new Date();
           await userCollection.updateOne(
             { username: username },
             { $set: user }

@@ -21,7 +21,18 @@ function getRandomNumberExcluding(excludedNumber, maxNumber) {
   return randomNumber;
 }
 
+const isTimeExpired = (ttlTime, lastUpdatedTime) => {
+  const now = new Date();
+  const timeDiff = now.getTime() - lastUpdatedTime.getTime();
+  const diffSeconds = timeDiff / 1000;
+  if (diffSeconds > ttlTime) {
+    return true;
+  }
+  return false;
+};
+
 module.exports = {
   convertToBoolean: convertToBoolean,
   getRandomNumberExcluding: getRandomNumberExcluding,
+  isTimeExpired: isTimeExpired,
 };
