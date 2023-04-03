@@ -34,7 +34,13 @@ fastify.register(require("./routes/olduser"), { prefix: "/olduser" });
 fastify.register(require("./routes/settings"), { prefix: "/settings" });
 
 fastify.get("/", async function (request, reply) {
-  return reply.view("/templates/index.ejs");
+  const userCollection = fastify.mongo.db.collection("users");
+
+  return reply.view("/templates/index.ejs", {
+    userCollectionCount: await userCollection.count(),
+    totalLimit: process.env.USER_LIMIT,
+    contactEmail: process.env.CONTACT_EMAIL,
+  });
 });
 
 fastify.get("/statsCache", async function (request, reply) {

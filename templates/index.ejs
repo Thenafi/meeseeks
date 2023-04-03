@@ -1,5 +1,24 @@
 <p>Hello there choose one please.</p>
 
-<a href="/newuser">New User</a> <br> <br>
-<a href="/olduser">Old User</a> <br> <br>
-<a href="/imex"> Import & Export Settings</a>
+<a href="/newuser">New User</a> <br>
+<a href="/olduser">Old User</a> <br>
+<a href="/imex"> Import & Export Settings</a> <br>
+<a href="mailto:<%=contactEmail%> ">Send email to admin</a>
+
+
+<br><br>
+<p>
+    <% if (userCollectionCount>= totalLimit) { %>
+
+        <p>Sorry, you have reached the maximum number of users allowed. For more information, please contact
+            admin.
+        </p>
+        <% } %>
+            <% if (userCollectionCount< totalLimit) { %>
+
+                <p>Number of users: <%=userCollectionCount%>
+                        <br>Maximum number of users allowed: <%=totalLimit%>
+                </p>
+                <% } %>
+
+</p>
