@@ -40,7 +40,13 @@ async function routes(fastify, options) {
       const { username, password } = request.body;
 
       try {
-        const user = await userCollection.findOne({ username: username });
+        const user = await userCollection.findOne(
+          {
+            username: username.toLowerCase(),
+          },
+          { projection: { _id: -1 } }
+        );
+        console.log(user);
         if (user) {
           return reply.view("/templates/message.ejs", {
             message: `User ${username} already exists`,
@@ -50,7 +56,7 @@ async function routes(fastify, options) {
         }
 
         const newUser = {
-          username: username,
+          username: username.toLowerCase(),
           password: await fastify.bcrypt.hash(password),
           links: [
             "https://rickandmortyapi.com/api/character/avatar/1.jpeg",

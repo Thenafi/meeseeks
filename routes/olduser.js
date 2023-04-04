@@ -9,7 +9,9 @@ async function routes(fastify, options) {
     const { username } = req.params;
 
     try {
-      const user = await userCollection.findOne({ username: username });
+      const user = await userCollection.findOne({
+        username: username.toLowerCase(),
+      });
       if (user) {
         return reply.view("/templates/message.ejs", {
           message: `User ${username} exists. To get all details  as json, add /password to the end of the url`,

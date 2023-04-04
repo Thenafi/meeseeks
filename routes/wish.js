@@ -26,7 +26,7 @@ async function routes(fastify, options) {
       let link;
       let lastIndex;
       const user = await userCollection.findOne(
-        { username: username },
+        { username: username.toLowerCase() },
         {
           projection: { password: 0, _id: 0 },
         }
@@ -78,7 +78,7 @@ async function routes(fastify, options) {
       }
 
       await userCollection.updateOne(
-        { username: username },
+        { username: username.toLowerCase() },
         { $set: { lastIndex: lastIndex, lastUpdated: new Date() } }
       );
       if (parseInt(user.ttl) > 0) {

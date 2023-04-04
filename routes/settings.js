@@ -21,7 +21,7 @@ async function routes(fastify, options) {
         user = JSON.parse(req.query.userJson);
       } else {
         user = await userCollection.findOne(
-          { username: username },
+          { username: username.toLowerCase() },
           {
             projection: { password: 0, _id: 0 },
           }
@@ -59,7 +59,7 @@ async function routes(fastify, options) {
 
       try {
         const user = await userCollection.findOne(
-          { username: username },
+          { username: username.toLowerCase() },
           { projection: { _id: 0 } }
         );
         if (!user) {
@@ -85,11 +85,11 @@ async function routes(fastify, options) {
           user.lastUpdated = new Date();
           user.lastIndex = 0;
           await userCollection.updateOne(
-            { username: username },
+            { username: username.toLowerCase() },
             { $set: user }
           );
 
-          //deleting cache to clear up old data like resetting
+          //resetting cache data on memory
           urlCache.del(username);
 
           return reply.view("/templates/message.ejs", {

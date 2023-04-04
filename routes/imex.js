@@ -19,13 +19,13 @@ async function routes(fastify, options) {
         const projection = { projection: { password: 0, _id: 0 } };
         const importedUserInDB = await userCollection.findOne(
           {
-            username: importedUser,
+            username: importedUser.toLowerCase(),
           },
           projection
         );
         const exportedUserInDB = await userCollection.findOne(
           {
-            username: exportedUser,
+            username: exportedUser.toLowerCase(),
           },
           projection
         );
