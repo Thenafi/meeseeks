@@ -12,8 +12,8 @@
     "ejs": "^3.1.9",
     "fastify": "^4.14.1",
     "fastify-bcrypt": "^1.0.1",
-    "fastify-markdown": "^0.4.0",
     "fastify-mongodb-sanitizer": "^1.2.1",
+    "marked": "^4.3.0",
     "node-cache": "^5.1.2",
     "nodemon": "^2.0.21"
   },

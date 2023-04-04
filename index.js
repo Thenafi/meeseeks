@@ -3,6 +3,8 @@ const fastify = require("fastify")({
 });
 const urlCache = require("./utils/cache");
 const path = require("path");
+const marked = require("marked");
+const fs = require("fs");
 require("dotenv").config();
 
 fastify.register(require("@fastify/view"), {
@@ -27,7 +29,7 @@ fastify.register(require("fastify-mongodb-sanitizer"), {
   query: true,
   body: true,
 });
-fastify.register(require("fastify-markdown"), { src: true });
+
 fastify.register(require("./routes/wish"), { prefix: "/wish" });
 fastify.register(require("./routes/imex"), { prefix: "/imex" });
 fastify.register(require("./routes/newuser"), { prefix: "/newuser" });
@@ -46,9 +48,8 @@ fastify.get("/", async function (request, reply) {
 
 fastify.get("/readme", async function (req, reply) {
   const readmePath = path.join(__dirname, "README.md");
-  const parseMD = await reply.markdown(readmePath);
-  const data = { content: parseMD }; // data object to pass to the EJS template
-
+  const parseMD = marked.parse(await fs.promises.readFile(readmePath, "utf8"));
+  const data = { content: parseMD };
   return reply.view("/templates/markdown.ejs", data);
 });
 
