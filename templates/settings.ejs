@@ -36,7 +36,7 @@
         <% for (var i=0; i < links.length; i++) { %>
             <!-- <label for="link<%= i %>">Link <%= i+1 %>:</label> -->
             <input type="url" name="linksList" id="link<%= i %>" required value="<%= links[i] %>"
-                maxlength="<%=  maxUrlLength %>" style="width: 100% ;">
+                maxlength="<%=  maxUrlLength %>" style="min-width: 95%  ;">
             <br>
             <% } %>
     </div>
@@ -46,7 +46,7 @@
 
 
 
-    <button class="button-primary type=" submit">Update</button>
+    <button type=" submit">Update</button>
 </form>
 
 <script>
