@@ -2,9 +2,8 @@
 
 Meeseeks is a web application that offers a unique and fun browsing experience by redirecting users to different URLs every time they hit a specific URL. The app allows users to set up a pool of URLs that can be images or different websites, and specify the time interval for redirection, such as every hour or every week.
 
-Meeseeks is especially useful in cases where a URL can be used as an input box. When a user enters their specific URL, the app checks for any cache data in memory. If the cache data is found, the user is immediately redirected to the URL. If it's not found, the app selects a URL from the user's pool of URLs and redirects them to that URL.
-
-Meeseeks is designed to optimize latency, providing a smooth and seamless browsing experience for users.
+Meeseeks is especially useful in cases where a URL can be used as an input box/ or the browser is fetching data from link. When a user enters their specific URL, the app checks for any cache data in memory. If the cache data is found, the user is immediately redirected to the URL. If it's not found, the app selects a URL from the user's pool of URLs and redirects them to that URL.
+Meeseeks is designed by focusing on latency.
 
 **_Features_**:
 
