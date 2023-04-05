@@ -17,12 +17,9 @@ async function routes(fastify, options) {
     const userCacheLink = urlCache.get(username);
 
     if (userCacheLink !== undefined) {
-      console.log("In cache");
       reply.redirect(307, userCacheLink);
       return;
     } else {
-      console.log("Not in cache");
-
       let link;
       let lastIndex;
       const user = await userCollection.findOne(
@@ -45,18 +42,11 @@ async function routes(fastify, options) {
         parseInt(user.ttl) > 0 &&
         !isTimeExpired(user.ttl, user.lastUpdated)
       ) {
-        console.log(
-          "In ttl",
-          user.ttl,
-          user.lastUpdated,
-          isTimeExpired(user.ttl, user.lastUpdated)
-        );
         reply.redirect(307, user.links[user.lastIndex]);
         urlCache.set(username, user.links[user.lastIndex], parseInt(user.ttl));
 
         return;
       }
-      console.log("Not in ttl", user.ttl, user.lastUpdated);
       if (user.random === true) {
         const randomIndex = getRandomNumberExcluding(
           user.lastIndex,
@@ -67,8 +57,6 @@ async function routes(fastify, options) {
         reply.redirect(307, link);
         lastIndex = randomIndex;
       } else {
-        // console.log("Not random", user.lastIndex);
-
         lastIndex = user.lastIndex + 1;
         if (lastIndex >= user.links.length) {
           lastIndex = 0;
@@ -82,7 +70,6 @@ async function routes(fastify, options) {
         { $set: { lastIndex: lastIndex, lastUpdated: new Date() } }
       );
       if (parseInt(user.ttl) > 0) {
-        console.log("Caching", user.ttl);
         urlCache.set(username, link, parseInt(user.ttl));
       }
     }

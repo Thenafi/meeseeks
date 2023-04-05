@@ -41,12 +41,13 @@
             <% } %>
     </div>
 
-    <button type="button" id="add-link">Add link</button>
+    <button type="button" id="add-link">Add Link</button>
+    <button type="button" id="remove-link">Remove Blank Fields</button>
     <br><br>
 
 
 
-    <button type=" submit">Update</button>
+    <button style="color: green" type="submit">Update</button>
 </form>
 
 <script>
@@ -89,7 +90,17 @@
 
 
 
-
+    // removing blank fields
+    const removeLinkButton = document.getElementById('remove-link');
+    removeLinkButton.addEventListener('click', () => {
+        const inputs = linksContainer.getElementsByTagName('input');
+        for (var i = inputs.length - 1; i >= 0; i--) {
+            if (inputs[i].value == '') {
+                inputs[i].remove();
+                linksContainer.getElementsByTagName('br')[i].remove();
+            }
+        }
+    })
 
 
 

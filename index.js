@@ -12,6 +12,9 @@ fastify.register(require("@fastify/view"), {
     ejs: require("ejs"),
   },
   layout: "/templates/layout.ejs",
+  defaultContext: {
+    title: process.env.SITE_TITLE || "Meeseeks",
+  },
 });
 fastify.register(require("@fastify/static"), {
   root: path.join(__dirname, "static"),

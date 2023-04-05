@@ -46,7 +46,6 @@ async function routes(fastify, options) {
           },
           { projection: { _id: -1 } }
         );
-        console.log(user);
         if (user) {
           return reply.view("/templates/message.ejs", {
             message: `User ${username} already exists`,
