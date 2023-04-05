@@ -7,7 +7,7 @@ async function routes(fastify, options) {
     if (request.query.username) {
       const { username } = request.query;
       try {
-        const user = await userCollection.findOne(
+        const userFound = await userCollection.findOne(
           {
             username: username.toLowerCase(),
           },
@@ -17,14 +17,14 @@ async function routes(fastify, options) {
             },
           }
         );
-        if (user) {
+        if (userFound) {
           return reply.view("/templates/olduser.ejs", {
-            url: `./wish/${user.username}`,
-            username: user.username,
+            url: `./wish/${username}`,
+            username: username,
           });
         } else {
           return reply.view("/templates/message.ejs", {
-            message: `User ${user.username} does not exist`,
+            message: `User ${username} does not exist`,
             url: `./`,
             linkText: "Go back",
           });
