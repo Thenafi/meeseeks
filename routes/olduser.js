@@ -1,39 +1,48 @@
+const { newUserSettingsSchema } = require("../utils/schema");
 async function routes(fastify, options) {
-  fastify.get("/", async (request, reply) => {
-    return reply.view("/templates/olduser.ejs");
-  });
+  const userCollection = fastify.mongo.db.collection("users");
+  fastify.addSchema(newUserSettingsSchema);
 
-  //fix the function
-  fastify.get("/:username", async function (req, reply) {
-    const userCollection = this.mongo.db.collection("users");
-    const { username } = req.params;
+  fastify.get("/", async function (request, reply) {
+    if (request.query.username) {
+      const { username } = request.query;
+      try {
+        const user = await userCollection.findOne(
+          {
+            username: username.toLowerCase(),
+          },
+          {
+            projection: {
+              username: -1,
+            },
+          }
+        );
+        if (user) {
+          return reply.view("/templates/olduser.ejs", {
+            url: `./wish/${user.username}`,
+            username: user.username,
+          });
+        } else {
+          return reply.view("/templates/message.ejs", {
+            message: `User ${user.username} does not exist`,
+            url: `./`,
+            linkText: "Go back",
+          });
+        }
+      } catch (err) {
+        console.log(err);
 
-    try {
-      const user = await userCollection.findOne({
-        username: username.toLowerCase(),
-      });
-      if (user) {
         return reply.view("/templates/message.ejs", {
-          message: `User ${username} exists. To get all details  as json, add /password to the end of the url`,
-          url: `./`,
-          linkText: "Go back",
-        });
-      } else {
-        return reply.view("/templates/message.ejs", {
-          message: `User ${username} does not exist`,
-          url: `./`,
+          message: "Internal server error. Report admin",
+          url: "./",
           linkText: "Go back",
         });
       }
-    } catch (err) {
-      console.log(err);
-
-      return reply.view("/templates/message.ejs", {
-        message: "Internal server error. Report admin",
-        url: "./",
-        linkText: "Go back",
-      });
     }
+    return reply.view("/templates/olduser.ejs", {
+      username: false,
+      usernameRegex: newUserSettingsSchema.properties.username.pattern,
+    });
   });
 }
 

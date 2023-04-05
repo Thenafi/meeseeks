@@ -74,7 +74,7 @@ async function routes(fastify, options) {
         await userCollection.insertOne(newUser);
         return reply.view("/templates/message.ejs", {
           message: `User ${username} created`,
-          url: "./olduser",
+          url: "./olduser?username=" + username.toLowerCase(),
           linkText: "Start Adding URL",
         });
       } catch (error) {

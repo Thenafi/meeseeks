@@ -1,16 +1,33 @@
-<!---  write an ejs template that will redirect user to this page url like /:username/settings -->
+<% if (username===false) { %>
 
-<input type="text" id="username" name="username">
+    <form>
+        <input type="text" id="username" name="username" required pattern="<%= usernameRegex %>">
+        <button type="submit">Edit settings</button>
+    </form>
 
-<button type="submit">Edit settings</button>
+    <% } else { %>
 
-<script>
-    //  write an ejs template that will redirect user to this page url like /:username/settings
-    document.querySelector('button').addEventListener('click', function () {
-        let username = document.querySelector('input').value;
-        window.location.href = `/settings/${username}`;
-    });
+        Your Redirection URL:
+        <a id="userUrl" href="<%= url %>">
+            wish/<%= username %>
+        </a>
 
+        <button type="button" onclick="copyToClipboard()">Copy</button>
+        <br>
+        <br>
+        <a href="../settings/<%= username %>">Go to settings </a>
+        <script>
 
+            function copyToClipboard() {
+                var copyText = document.getElementById("userUrl").href;
+                navigator.clipboard.writeText(copyText)
+                    .then(() => {
+                        alert("Copied the URL to the clipboard!");
+                    })
+                    .catch((error) => {
+                        console.error('Failed to copy the URL: ', error);
+                    });
+            }
+        </script>
 
-</script>
+        <% } %>

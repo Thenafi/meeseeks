@@ -77,7 +77,7 @@ Meeseeks is an app that redirects you to different URLs every time you hit a spe
 
 - **How to report a problem?**
 
-  You can email me at [mt4ui6s1l@mozmail.com](mailto:mt4ui6s1l@mozmail.com) or create an issue on GitHub.
+  You can email me at [mt4ui6s1l@mozmail.com](mailto:mt4ui6s1l@mozmail.com) or create an issue on [Github](https://github.com/Thenafi/meeseeks).
 
 - **Am I allowed to collaborate?**
 
