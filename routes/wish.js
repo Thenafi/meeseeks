@@ -58,7 +58,7 @@ async function routes(fastify, options) {
       const timeDiff =
         timeNow.getSeconds() - user.lastSettingsUpdate.getSeconds();
       const conversionToFrequencyUnit = (timeDiff / user.ttl) | 0;
-      const lastIndexPlusOne = conversionToFrequencyUnit % linksLength;
+      const lastIndexPlusOne = conversionToFrequencyUnit % user.links.length;
       lastIndex = Math.max(lastIndexPlusOne - 1, 0);
       link = user.links[lastIndex];
       ttl = user.ttl - timeDiff; // remaining ttl
