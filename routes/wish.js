@@ -35,7 +35,7 @@ async function routes(fastify, options) {
       });
     }
 
-    const ttl = parseInt(user.ttl);
+    let ttl = parseInt(user.ttl);
     if (ttl > 0 && !isTimeExpired(ttl, user.lastIndexUpdate)) {
       reply.redirect(307, user.links[user.lastIndex]);
       urlCache.set(username, user.links[user.lastIndex], ttl);
