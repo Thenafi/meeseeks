@@ -1,6 +1,7 @@
 const urlCache = require("../utils/cache");
 const { getRandomNumberExcluding, isTimeExpired } = require("../utils/helpers");
 
+//ttl is in seconds
 async function routes(fastify, options) {
   const userCollection = fastify.mongo.db.collection("users");
 
@@ -48,8 +49,19 @@ async function routes(fastify, options) {
       lastIndex = getRandomNumberExcluding(user.lastIndex, user.links.length);
       link = user.links[lastIndex];
     } else {
-      lastIndex = (user.lastIndex + 1) % user.links.length;
+      if (!user.periodicity) {
+        lastIndex = (user.lastIndex + 1) % user.links.length;
+        link = user.links[lastIndex];
+      }
+
+      const timeNow = new Date();
+      const timeDiff =
+        timeNow.getSeconds() - user.lastSettingsUpdate.getSeconds();
+      const conversionToFrequencyUnit = (timeDiff / user.ttl) | 0;
+      const lastIndexPlusOne = conversionToFrequencyUnit % linksLength;
+      lastIndex = Math.max(lastIndexPlusOne - 1, 0);
       link = user.links[lastIndex];
+      ttl = user.ttl - timeDiff; // remaining ttl
     }
 
     reply.redirect(307, link);
