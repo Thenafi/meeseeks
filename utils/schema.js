@@ -18,7 +18,6 @@ const newUserSettingsSchema = {
   required: ["username", "password"],
   additionalProperties: false,
 };
-
 const settingsSchema = {
   $id: "settingsSchema",
   type: "object",
@@ -49,9 +48,46 @@ const settingsSchema = {
       type: "string",
       pattern: regexUsernameAsStringPattern,
     },
+    periodicity: {
+      type: "boolean",
+    },
   },
   required: ["linksList", "ttl", "randomness", "password"],
   additionalProperties: false,
+  allOf: [
+    {
+      if: {
+        properties: {
+          ttl: {
+            type: "integer",
+            minimum: 3600,
+          },
+          randomness: {
+            type: "boolean",
+            const: false,
+          },
+        },
+        required: ["ttl", "randomness"],
+      },
+      then: {
+        properties: {
+          periodicity: {
+            type: "boolean",
+            enum: [true, false],
+          },
+        },
+        required: ["periodicity"],
+      },
+      else: {
+        properties: {
+          periodicity: {
+            type: "boolean",
+            const: false,
+          },
+        },
+      },
+    },
+  ],
 };
 
 module.exports = {

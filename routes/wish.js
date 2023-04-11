@@ -38,15 +38,18 @@ async function routes(fastify, options) {
         });
       }
 
+      // checking in database and setting cache
       if (
         parseInt(user.ttl) > 0 &&
-        !isTimeExpired(user.ttl, user.lastUpdated)
+        !isTimeExpired(user.ttl, user.lastIndexUpdate)
       ) {
         reply.redirect(307, user.links[user.lastIndex]);
         urlCache.set(username, user.links[user.lastIndex], parseInt(user.ttl));
 
         return;
       }
+
+      // things that happen after expiry of ttl
       if (user.random === true) {
         const randomIndex = getRandomNumberExcluding(
           user.lastIndex,
@@ -67,7 +70,7 @@ async function routes(fastify, options) {
 
       await userCollection.updateOne(
         { username: username.toLowerCase() },
-        { $set: { lastIndex: lastIndex, lastUpdated: new Date() } }
+        { $set: { lastIndex: lastIndex, lastIndexUpdate: new Date() } }
       );
       if (parseInt(user.ttl) > 0) {
         urlCache.set(username, link, parseInt(user.ttl));

@@ -28,6 +28,16 @@ async function routes(fastify, options) {
         );
       }
       if (user) {
+        if (user.links.length <= 1)
+          user.links.push(
+            `https://rickandmortyapi.com/api/character/avatar/${Math.floor(
+              Math.random() * 800
+            )}.jpeg`
+          );
+
+        if (user.ttl < 3600 || user.random === true) user.periodicity = false;
+        else user.periodicity = user.periodicity ? user.periodicity : false;
+
         user.passwordRegex = settingsSchema.properties.password.pattern;
         user.maxUrlLength = settingsSchema.properties.linksList.items.maxLength;
         return reply.view("/templates/settings.ejs", user);
@@ -55,7 +65,7 @@ async function routes(fastify, options) {
     },
     async handler(req, reply) {
       const { username } = req.params;
-      const { password, linksList, ttl, randomness } = req.body;
+      const { password, linksList, ttl, randomness, periodicity } = req.body;
 
       try {
         const user = await userCollection.findOne(
@@ -80,11 +90,14 @@ async function routes(fastify, options) {
             );
 
           user.links = validLinksList;
-          user.lastIndex = 0; 
+          user.lastIndex = 0;
           user.ttl = parseInt(ttl);
+          user.periodicity = periodicity
+            ? convertToBoolean(periodicity)
+            : false;
           user.random = convertToBoolean(randomness);
-          user.lastUpdated = new Date();
-          user.created = user.create ? user.created : new Date();
+          user.lastIndexUpdate = new Date();
+          user.lastSettingsUpdate = new Date();
           await userCollection.updateOne(
             { username: username.toLowerCase() },
             { $set: user }

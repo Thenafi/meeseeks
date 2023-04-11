@@ -21,9 +21,9 @@ function getRandomNumberExcluding(excludedNumber, maxNumber) {
   return randomNumber;
 }
 
-const isTimeExpired = (ttlTime, lastUpdatedTime) => {
+const isTimeExpired = (ttlTime, lastIndexUpdateTime) => {
   const now = new Date();
-  const timeDiff = now.getTime() - lastUpdatedTime.getTime();
+  const timeDiff = now.getTime() - lastIndexUpdateTime.getTime();
   const diffSeconds = timeDiff / 1000;
   if (diffSeconds > ttlTime) {
     return true;

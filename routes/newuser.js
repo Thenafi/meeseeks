@@ -68,8 +68,10 @@ async function routes(fastify, options) {
           lastIndex: 0,
           ttl: 0,
           random: true,
+          periodicity: true,
           userCreated: new Date(), // if you need cleanup users
-          lastUpdated: new Date(),
+          lastIndexUpdate: new Date(),
+          lastSettingsUpdate: new Date(),
         };
         await userCollection.insertOne(newUser);
         return reply.view("/templates/message.ejs", {

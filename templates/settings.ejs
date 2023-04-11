@@ -25,6 +25,14 @@
     </select>
     <br><br>
 
+    <label for="periodicity">Guarantee Periodicity:</label>
+    <small> Ensuring that image/url change on selected frequency. More in FAQ</small>
+    <select name="periodicity" id="periodicity" disabled>
+        <option value="true">True</option>
+        <option value="false" selected>False</option>
+    </select>
+    <br><br>
+
     <label for="links">Links:</label>
     <small>Number of link limit is 2 to 200. Current number of links: <%= links.length %></small>
     <br>
@@ -53,6 +61,18 @@
 <script>
     const addLinkButton = document.getElementById('add-link');
     const linksContainer = document.getElementById('links-container');
+    const periodicityElement = document.getElementById('periodicity');
+    const randomElement = document.getElementById('randomness');
+    const ttlElement = document.getElementById('ttl');
+    const forcingPeriodicity = function () {
+        if (ttlElement.value >= 3600 && randomElement.value === "false") {
+            periodicityElement.disabled = false;
+            periodicityElement.value = 'true';
+        } else {
+            periodicityElement.disabled = true;
+            periodicityElement.value = 'false';
+        }
+    }
 
     addLinkButton.addEventListener('click', () => {
         const input = document.createElement('input');
@@ -70,7 +90,6 @@
 
     // based on ttl value, select the correct option
     const ttl = "<%= ttl  %>";
-    const ttlElement = document.getElementById('ttl');
     const options = ttlElement.getElementsByTagName('option');
     for (var i = 0; i < options.length; i++) {
         if (options[i].value == ttl) {
@@ -80,7 +99,6 @@
 
     // based on randomness, select the correct option
     const random = "<%= random  %>";
-    const randomElement = document.getElementById('randomness');
     const options2 = randomElement.getElementsByTagName('option');
     for (var i = 0; i < options2.length; i++) {
         if (options2[i].value == random) {
@@ -88,7 +106,14 @@
         }
     }
 
-
+    const periodicity = "<%= periodicity  %>";
+    const options3 = periodicityElement.getElementsByTagName('option');
+    for (var i = 0; i < options3.length; i++) {
+        if (options3[i].value == periodicity) {
+            options3[i].selected = true;
+        }
+    }
+    forcingPeriodicity();
 
     // removing blank fields
     const removeLinkButton = document.getElementById('remove-link');
@@ -104,6 +129,8 @@
 
 
 
+    ttlElement.addEventListener('change', forcingPeriodicity);
+    randomElement.addEventListener('change', forcingPeriodicity);
 
 
 </script>
