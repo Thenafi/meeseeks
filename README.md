@@ -35,14 +35,14 @@ Meeseeks is designed by focusing on latency.
   Next, select how often you want your URL to change. Here are the options:
 
   - Every Request - Every time you hit your URL, you will be redirected to a different URL.
-  - Every Minute - In your first request, you will be redirected to one URL. If you request it again within a minute, you will be redirected to the same URL. After a minute, if you hit your URL, it will change to a different one based on your randomness preference. If you or anyone doesn't hit your URL then it will not change untill you do.
+  - Every Minute - In your first request, you will be redirected to one URL. If you request it again within a minute, you will be redirected to the same URL. After a minute, if you hit your URL, it will change to a different one based on your randomness preference. If you or anyone doesn't hit your URL then it will not change until you do.
   - Every Hour - Your URL will stay the same for every hour, then it will change. The same case applies to days and months.
 
   Remember to save your password because there is no reset option.
 
-- **Is it necessary for me to go to the address to change everytime?**
+- **Is it necessary for me to go to the address to change every time?**
 
-  No, it's not necessary. If anyone visits your URL, they will be redirected to your URL Redirected URL everytime, and the time will be set if applicable.
+  No, it's not necessary. If anyone visits your URL, they will be redirected to your URL Redirected URL every time, and the time will be set if applicable.
 
 - **How to reset the password?**
 

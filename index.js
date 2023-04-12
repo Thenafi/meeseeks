@@ -60,6 +60,10 @@ fastify.get("/statsCache", async function (request, reply) {
   return reply.send(urlCache.getStats());
 });
 
+fastify.get("/meeseeks", async function (request, reply) {
+  return reply.redirect("https://www.youtube.com/watch?v=dQw4w9WgXcQ");
+});
+
 const start = async () => {
   try {
     await fastify.listen({ port: process.env.PORT || 8080, host: "0.0.0.0" });
