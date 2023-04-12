@@ -55,13 +55,12 @@ async function routes(fastify, options) {
       }
 
       const timeNow = new Date();
-      const timeDiff =
-        timeNow.getSeconds() - user.lastSettingsUpdate.getSeconds();
+      const timeDiff = (timeNow - user.lastSettingsUpdate) / 1000;
       const conversionToFrequencyUnit = (timeDiff / user.ttl) | 0;
       const lastIndexPlusOne = conversionToFrequencyUnit % user.links.length;
       lastIndex = Math.max(lastIndexPlusOne - 1, 0);
       link = user.links[lastIndex];
-      ttl = user.ttl - timeDiff; // remaining ttl
+      ttl = user.ttl - Math.floor(timeDiff % user.ttl); // remaining ttl
     }
 
     reply.redirect(307, link);

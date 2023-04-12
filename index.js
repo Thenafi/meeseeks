@@ -18,7 +18,7 @@ fastify.register(require("@fastify/view"), {
 });
 fastify.register(require("@fastify/static"), {
   root: path.join(__dirname, "static"),
-  prefix: "/static/", // optional: default '/'
+  prefix: "/static/",
 });
 fastify.register(require("fastify-bcrypt"), {
   saltWorkFactor: 8,

@@ -1,4 +1,4 @@
-const regexUsernameAsStringPattern = "^[A-Za-z][A-Za-z\\d]{4,15}$";
+const regexUsernameAsStringPattern = "^[A-Za-z]|[A-Za-z\\d]{4,15}$";
 
 const regexPasswordAsStringPattern = "^[A-Za-z\\d!@#$%^&*()_+{}[\\]\\|]{5,16}$";
 
