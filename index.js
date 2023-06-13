@@ -34,7 +34,8 @@ fastify.register(require("fastify-mongodb-sanitizer"), {
 });
 
 fastify.register(require("./routes/wish"), { prefix: "/wish" });
-fastify.register(require("./routes/debug"), { prefix: "/debug" });
+if (Boolean(process.env.NODE_ENV_DEV))
+  fastify.register(require("./routes/debug"), { prefix: "/debug" });
 fastify.register(require("./routes/imex"), { prefix: "/imex" });
 fastify.register(require("./routes/newuser"), { prefix: "/newuser" });
 fastify.register(require("./routes/olduser"), { prefix: "/olduser" });

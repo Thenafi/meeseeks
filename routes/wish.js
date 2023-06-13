@@ -21,7 +21,7 @@ const expireBrain = function (
     return true;
   }
   const timeDiff = (timeNow - lastIndexUpdate) / 1000;
-  if (timeDiff < ttl) return false;
+  if (ttl > timeDiff) return false;
   return true;
 };
 
@@ -31,9 +31,7 @@ const updateCache = function (
   linkList,
   linkIndex,
   ttl,
-  lastIndexUpdate,
   lastSettingsUpdate,
-  ttl,
   periodicity
 ) {
   const timeNow = new Date();
@@ -66,6 +64,7 @@ async function routes(fastify, options) {
     const username = request.params.username.toLowerCase();
     const userCacheLink = urlCache.get(username);
     if (userCacheLink) {
+      if (Boolean(process.env.NODE_ENV_DEV)) console.log("cache hit");
       reply.redirect(307, userCacheLink);
       return;
     }
@@ -83,6 +82,13 @@ async function routes(fastify, options) {
       });
     }
 
+    // //testing settings.
+    // // debugger;
+    // user.random = true;
+    // user.periodicity = true;
+    // user.ttl = 0;
+    // ///
+
     if (
       expireBrain(
         user.lastIndexUpdate,
@@ -97,9 +103,7 @@ async function routes(fastify, options) {
         user.links,
         user.lastIndex,
         user.ttl,
-        user.lastIndexUpdate,
         user.lastSettingsUpdate,
-        user.ttl,
         user.periodicity
       );
       return;
@@ -112,28 +116,26 @@ async function routes(fastify, options) {
       lastIndex = getRandomNumberExcluding(user.lastIndex, user.links.length);
       link = user.links[lastIndex];
     } else {
-      if (!user.periodicity) {
+      if (!user.periodicity || user.ttl === 0) {
         lastIndex = (user.lastIndex + 1) % user.links.length; // complex math done in single line. Here we just need to update the user link  if more then length of links then it will automatically start from 0
         link = user.links[lastIndex];
+      } else {
+        const timeNow = new Date();
+        const timeDiff = (timeNow - user.lastSettingsUpdate) / 1000;
+        const conversionToFrequencyUnit = (timeDiff / user.ttl) | 0;
+        const lastIndexPlusOne = conversionToFrequencyUnit % user.links.length;
+        lastIndex = Math.max(lastIndexPlusOne - 1, 0);
+        link = user.links[lastIndex];
       }
-
-      const timeNow = new Date();
-      const timeDiff = (timeNow - user.lastSettingsUpdate) / 1000;
-      const conversionToFrequencyUnit = (timeDiff / user.ttl) | 0;
-      const lastIndexPlusOne = conversionToFrequencyUnit % user.links.length;
-      lastIndex = Math.max(lastIndexPlusOne - 1, 0);
-      link = user.links[lastIndex];
     }
 
     reply.redirect(307, link);
     updateCache(
       username,
       user.links,
-      user.lastIndex,
+      lastIndex,
       user.ttl,
-      user.lastIndexUpdate,
       user.lastSettingsUpdate,
-      user.ttl,
       user.periodicity
     );
 
