@@ -16,17 +16,13 @@ async function routes(fastify, options) {
     const { username } = req.params;
 
     try {
-      let user;
-      if (req.query.userJson) {
-        user = JSON.parse(req.query.userJson);
-      } else {
-        user = await userCollection.findOne(
-          { username: username.toLowerCase() },
-          {
-            projection: { password: 0, _id: 0 },
-          }
-        );
-      }
+      const user = req.query.userJson
+        ? JSON.parse(req.query.userJson)
+        : await userCollection.findOne(
+            { username: username.toLowerCase() },
+            { projection: { password: 0, _id: 0 } }
+          );
+
       if (user) {
         if (user.links.length <= 1)
           user.links.push(
@@ -36,7 +32,7 @@ async function routes(fastify, options) {
           );
 
         if (user.ttl < 3600 || user.random === true) user.periodicity = false;
-        else user.periodicity = user.periodicity ? user.periodicity : false;
+        else user.periodicity = user.periodicity ?? false;
 
         user.passwordRegex = settingsSchema.properties.password.pattern;
         user.maxUrlLength = settingsSchema.properties.linksList.items.maxLength;
@@ -89,7 +85,7 @@ async function routes(fastify, options) {
               )}.jpeg`
             );
 
-          user.links = validLinksList;
+          user.links = validLinksList; 
           user.lastIndex = 0;
           user.ttl = parseInt(ttl);
           user.periodicity = periodicity

@@ -38,15 +38,15 @@ Meeseeks is designed by focusing on latency.
 
 - **How to use it?**
 
-To use the URL Redirect app, first register yourself. Then go to the settings page, which can be accessed from the old user page. Add the URLs that you want to be redirected to. Then select whether you want to get randomly redirected every time you hit your URL or get redirected one after another by selecting the _Use randomness_ option to false or true. If true, you will be randomly redirected; otherwise, it will be in a serialized manner.
+To use the URL Redirect app, first register yourself. Then go to the settings page, which can be accessed from the old user page. Add the URLs that you want to be redirected to. Then select whether you want to get randomly redirected every time someone hit your URL or get redirected one after another by selecting the _Use randomness_ option to true or false. If true, you will be randomly redirected; otherwise, it will be in a serialized manner. There is also a option called _Guarantee Periodicity_ which I described below.
 
 Next, select how often you want your URL to change. Here are the options:
 
 - Every Request - Every time you hit your URL, you will be redirected to a different URL.
 
-- Every Minute - You will be redirected to one URL in your first request. If you request it again within a minute, you will be redirected to the same URL. After a minute, if you hit your URL, it will change to a different one based on your random preference. If you or anyone doesn't hit your URL, it will not change until you do.
+- Every Minute - You will be redirected to one URL in your first request. If you request it again within a minute, you will be redirected to the same URL. After a minute, if you/someone hit your URL, it will change to a different one based on your randomness preference. If you or anyone doesn't hit your URL, it will not change.
 
-- Every Hour - Your URL will stay the same every hour, then it will change. The same case applies to days and months.
+- Every Hour - Your URL will stay the same for an hour after a URL hit, then it will change(dependent on Guarantee Periodicity settings). The same case applies to days and weeks.
 
 Then click update. It will update your settings and resets your timings.
 
@@ -54,7 +54,7 @@ Remember to save your password because there is no reset option when registering
 
 - **Is it necessary for me to go to the address to change every time?**
 
-No, it's not necessary. If anyone visits your URL, they will be redirected to your URL Redirected URL every time, and the time will be set if applicable.
+No, it's not necessary. If anyone visits your URL,then it will trigger the change based on settings.
 
 - **How to reset the password?**
 
@@ -62,7 +62,7 @@ Unfortunately, there is no option to reset your password at this time. You can c
 
 - **How to delete a URL?**
 
-To delete a URL, simply replace the URL you want to remove with an existing URL. For example, if you want to delete URL2, replace it with URL3. There will be duplicate URLs; don't worry about them, as they will be removed in the backend. Remember to save your changes. You must have at least two URLs in your settings, or I will handle that.
+To delete a URL, simply replace the URL you want to remove with an existing URL. For example, if you want to delete URL2, replace it with URL3. There will be duplicate URLs; don't worry about them, as they will be removed in the backend. Remember to save your changes. You must have at least two URLs in your settings, or the system will handle that.
 OR
 Delete the URL/clear the field/ have a blank field, and then use the REMOVE BLANK FIELD button to remove the link and update.
 
@@ -78,13 +78,13 @@ For another instance, you can set a list of URLs with random websites or images 
 
 - **What is Guarantee Periodicity?**
 
-If the option is _false_, someone from the world must hit your URL to trigger the change. If no one hits your URL, it will not change until someone does. To clarify, if someone saves an option like "Every Hour," they might expect the URL to change at specific times, like 1:00 PM, 2:00 PM, and 3:00 PM. However, that's not how it works. The URL will only change when someone hits it. For instance, if someone visits the URL at 1:35 PM, it will remain the same until 2:35 PM, but after that, it will only change when someone hits it again. If nobody hits it, it will not change forever.
+If the option is _false_, someone from the world must hit your URL to trigger the change. If no one hits your URL, it will not change until someone does. To clarify, if someone saves an option like "Every Hour," they might expect the URL to change at specific times, like 1:00 PM, 2:00 PM, and 3:00 PM. However, that's not how it works. The URL will only change when someone hits it. For instance, if someone visits the URL at 1:35 PM, it will remain the same until 2:35 PM, but after that, it will only change when someone hits it again. If nobody hits the URL, it will not change forever.
 
-If the option is _true_ then no matter when someone hits your URL, they will be redirected to the specific URL for that time. For example, some save URLs at 8:23 PM; then, for the next hour, the profile will be URL 1; after 9:23 PM, it will be URL2.
+If the option is _true_ then no matter when someone hits your URL, they will be redirected to the specific URL for that time. For example, some save URLs at 8:23 PM; then, for the next hour, the profile will be URL 1; after 9:23 PM, it will be URL2. Then URL 3 in 10:23 PM.
 
 - **Why isn't it a guarantee that my URL will change every minute?**
 
-  Because guaranteeing timing for every minute looks inefficient to me. But I will bring that feature if so many people want this.
+Because guaranteeing timing for every minute looks inefficient to me.
 
 - **Why isn't there a password reset option?**
 
@@ -92,7 +92,7 @@ Adding a password reset option would add complexity and infrastructure cost. If 
 
 - **How to use the import/export option?**
 
-To use the import/export option, create a new user first. Then go to the Import/Export page and provide your user details. Your old/copyable user data will be added to your new account. Save it with your password.
+To use the import/export option, create a new user first. Then go to the Import/Export page and provide your user details. Your old/copyable user data will be added to your new account. Save it with your new account's password.
 
 - **What are the best settings?**
 
@@ -112,11 +112,11 @@ Maybe.
 
 - **Who are the users?**
 
-- Where someone can use the URL to change the image.
+1. Where someone can use the URL to change the image.
 
-- Where someone wants to add randomness with a URL.
+2. Where someone wants to add randomness with a URL.
 
-- TorrentBD Users Profile Pic
+3. TorrentBD Users Profile Pic
 
 ## How to Deploy Locally
 

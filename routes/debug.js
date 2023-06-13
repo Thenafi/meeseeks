@@ -16,12 +16,8 @@ async function routes(fastify, options) {
   fastify.get("/:username", async (request, reply) => {
     const username = request.params.username.toLowerCase();
     const userCacheLink = urlCache.get(username);
-
-    if (userCacheLink) {
-      reply.redirect(307, userCacheLink);
-      return;
-    }
-
+    const cacheTTL = urlCache.getTtl(username);
+    const finalData = {};
     const user = await userCollection.findOne(
       { username },
       { projection: { password: 0, _id: 0 } }
@@ -35,15 +31,7 @@ async function routes(fastify, options) {
       });
     }
 
-    let ttl = parseInt(user.ttl);
-    if (ttl > 0 && !isTimeExpired(ttl, user.lastIndexUpdate)) {
-      reply.redirect(307, user.links[user.lastIndex]);
-      ttl =
-        user.ttl -
-        Math.floor(((timeNow - user.lastSettingsUpdate) / 1000) % user.ttl);
-      urlCache.set(username, user.links[user.lastIndex], ttl);
-      return;
-    }
+    const isTTLExpired = isTimeExpired(cacheTTL, user.lastIndexUpdate);
 
     let link;
     let lastIndex;
@@ -58,24 +46,27 @@ async function routes(fastify, options) {
       }
 
       const timeNow = new Date();
+      console.log(timeNow, user.lastSettingsUpdate);
       const timeDiff = (timeNow - user.lastSettingsUpdate) / 1000;
+      finalData.timeDiff = timeDiff;
       const conversionToFrequencyUnit = (timeDiff / user.ttl) | 0;
+      finalData.conversionToFrequencyUnit = conversionToFrequencyUnit;
       const lastIndexPlusOne = conversionToFrequencyUnit % user.links.length;
       lastIndex = Math.max(lastIndexPlusOne - 1, 0);
       link = user.links[lastIndex];
       ttl = user.ttl - Math.floor(timeDiff % user.ttl); // remaining ttl
     }
 
-    reply.redirect(307, link);
+    finalData.user = user;
+    finalData.link = link;
+    finalData.lastIndex = lastIndex;
+    finalData.isTTLExpired = isTTLExpired;
+    finalData.cacheTTL = cacheTTL ? new Date(cacheTTL).toLocaleString() : null;
+    finalData.ttl = ttl;
+    finalData.userCacheLink = userCacheLink ? userCacheLink : null;
 
-    await userCollection.updateOne(
-      { username },
-      { $set: { lastIndex, lastIndexUpdate: new Date() } }
-    );
-
-    if (ttl > 0) {
-      urlCache.set(username, link, ttl);
-    }
+    console.log(finalData);
+    reply.send(finalData);
   });
 }
 
