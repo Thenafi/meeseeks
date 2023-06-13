@@ -68,7 +68,7 @@ async function routes(fastify, options) {
           lastIndex: 0,
           ttl: 0,
           random: true,
-          periodicity: true,
+          periodicity: true, //Guarantee Periodicity
           userCreated: new Date(), // if you need cleanup users
           lastIndexUpdate: new Date(),
           lastSettingsUpdate: new Date(),
