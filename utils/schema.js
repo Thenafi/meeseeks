@@ -62,10 +62,6 @@ const settingsSchema = {
             type: "integer",
             minimum: 3600,
           },
-          randomness: {
-            type: "boolean",
-            const: false,
-          },
         },
         required: ["ttl", "randomness"],
       },

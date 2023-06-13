@@ -31,7 +31,7 @@ async function routes(fastify, options) {
             )}.jpeg`
           );
 
-        if (user.ttl < 3600 || user.random === true) user.periodicity = false;
+        if (user.ttl < 3600) user.periodicity = false;
         else user.periodicity = user.periodicity ?? false;
 
         user.passwordRegex = settingsSchema.properties.password.pattern;
@@ -62,7 +62,7 @@ async function routes(fastify, options) {
     async handler(req, reply) {
       const { username } = req.params;
       const { password, linksList, ttl, randomness, periodicity } = req.body;
-
+      
       try {
         const user = await userCollection.findOne(
           { username: username.toLowerCase() },
@@ -85,7 +85,7 @@ async function routes(fastify, options) {
               )}.jpeg`
             );
 
-          user.links = validLinksList; 
+          user.links = validLinksList;
           user.lastIndex = 0;
           user.ttl = parseInt(ttl);
           user.periodicity = periodicity

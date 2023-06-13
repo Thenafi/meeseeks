@@ -65,9 +65,9 @@
     const randomElement = document.getElementById('randomness');
     const ttlElement = document.getElementById('ttl');
     const forcingPeriodicity = function () {
-        if (ttlElement.value >= 3600 && randomElement.value === "false") {
+        if (ttlElement.value >= 3600) {
             periodicityElement.disabled = false;
-            periodicityElement.value = 'true';
+            // periodicityElement.value = 'true';
         } else {
             periodicityElement.disabled = true;
             periodicityElement.value = 'false';

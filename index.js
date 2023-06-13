@@ -63,7 +63,7 @@ fastify.get("/statsCache", async function (request, reply) {
 });
 
 fastify.get("/meeseeks", async function (request, reply) {
-  return reply.redirect("https://www.youtube.com/watch?v=dQw4w9WgXcQ");
+  return reply.redirect("https://tinyurl.com/yc3u6mbe");
 });
 
 const start = async () => {
