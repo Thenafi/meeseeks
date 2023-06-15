@@ -1,10 +1,6 @@
 # Meeseeks
 
-Meeseeks is a web application that offers a unique and fun browsing experience by redirecting users to different URLs every time they hit a specific URL. The app allows users to set up a pool of URLs that can be images or different websites and specify the time interval for redirection, such as every hour or every week.
-
-Meeseeks is especially useful in cases where a URL can be used as an input box/ or the browser is fetching data from the link. When a user enters their specific URL, the app checks for any cache data in memory. The user is immediately redirected to the URL if the cache data is found. If it's not found, the app selects a URL from the user's pool of URLs and redirects them to that URL.
-
-Meeseeks is designed by focusing on latency.
+Meeseeks is a web application that offers a unique and fun browsing experience by redirecting users to different URLs every time a visitor hit a specific user URL based on settings. The app allows users to set up a pool of URLs that can be images or different website's URL. When someone hits the user URL it redirects the visitor to a specific or random URL.
 
 **_Features_**:
 
@@ -14,23 +10,24 @@ Meeseeks is designed by focusing on latency.
 
 - Time for changing redirected URL
 
-- User Database
-
 - Easily deployable
-
-- Simple Authentication
 
 - Updating URLs, time, etc.
 
-- Focused on latency by using in-memory cache
+- Focused on latency.
 
 **_Downside_**
 
 - No password reset functionality
+- URL limit up to 200
+- URL length limit 700
+- May have bugs ¯\ _(ツ) _ /¯
 
-- Have bugs may be ¯\_(ツ)\_/¯
+Currently live at https://meeseeks.fly.dev
 
 ## Demo
+
+For example, in this demo, whenever I refresh the page, a new image appears each time. This happens because the profile picture URL on this website is my Meeseeks user URL, which redirects the traffic or visitor whenever someone hits or refreshes the page.
 
 ![Meeseeks Demo](https://f000.backblazeb2.com/file/ShareX2022/ShareX/chrome_fYPGukqUvq.gif "Demo how meeseeks redirects / images change for request/reload.")
 
@@ -38,7 +35,14 @@ Meeseeks is designed by focusing on latency.
 
 - **How to use it?**
 
-To use the URL Redirect app, first register yourself. Then go to the settings page, which can be accessed from the old user page. Add the URLs that you want to be redirected to. Then select whether you want to get randomly redirected every time someone hit your URL or get redirected one after another by selecting the _Use randomness_ option to true or false. If true, you will be randomly redirected; otherwise, it will be in a serialized manner. There is also a option called _Guarantee Periodicity_ which I described below.
+Four easy steps:
+
+- First register yourself. Reminder: No password reset option.
+- Then go to the settings page, which can be accessed from the old user page.
+- Add the URLs that you want to be redirected to.
+- Update with password.
+
+Now if you wish you play with the options. Like select whether you want to get randomly redirected every time someone hit your URL or get redirected one after another by selecting the _Use randomness_ option to true or false. If true, you will be randomly redirected; otherwise, it will be in a serialized manner. Meaning 1st URL then 2nd URL then 3rd URL...
 
 Next, select how often you want your URL to change. Here are the options:
 
@@ -48,33 +52,7 @@ Next, select how often you want your URL to change. Here are the options:
 
 - Every Hour - Your URL will stay the same for an hour after a URL hit, then it will change(dependent on Guarantee Periodicity settings). The same case applies to days and weeks.
 
-Then click update. It will update your settings and resets your timings.
-
-Remember to save your password because there is no reset option when registering as a new user.
-
-- **Is it necessary for me to go to the address to change every time?**
-
-No, it's not necessary. If anyone visits your URL,then it will trigger the change based on settings.
-
-- **How to reset the password?**
-
-Unfortunately, there is no option to reset your password at this time. You can create a new account and import your settings, though.
-
-- **How to delete a URL?**
-
-To delete a URL, simply replace the URL you want to remove with an existing URL. For example, if you want to delete URL2, replace it with URL3. There will be duplicate URLs; don't worry about them, as they will be removed in the backend. Remember to save your changes. You must have at least two URLs in your settings, or the system will handle that.
-OR
-Delete the URL/clear the field/ have a blank field, and then use the REMOVE BLANK FIELD button to remove the link and update.
-
-- **How to reset my timing and link starting point?**
-
-When you update your profile, it resets everything.
-
-- **What is this app does?**
-
-This web application allows you to change your profile picture URL to multiple URLs so that each time someone views your profile picture, they are redirected to a different URL from the list of URLs you have provided. This feature can be used for various purposes, such as having fun with friends or an audience or simply adding variety to your profile picture.
-
-For another instance, you can set a list of URLs with random websites or images and share the link. Each time someone visits the link, they will be surprised with different content every time. This feature can be used to keep your audience engaged and entertained. Because no one will know what will be shown to them
+There is also a option called _Guarantee Periodicity_ which I described below. Keep in mind updating your settings and resets your timings. One more reminder to memorize your password because there is no reset option when registering as a new user.
 
 - **What is Guarantee Periodicity?**
 
@@ -82,11 +60,39 @@ If the option is _false_, someone from the world must hit your URL to trigger th
 
 If the option is _true_ then no matter when someone hits your URL, they will be redirected to the specific URL for that time. For example, some save URLs at 8:23 PM; then, for the next hour, the profile will be URL 1; after 9:23 PM, it will be URL2. Then URL 3 in 10:23 PM.
 
-- **Why isn't it a guarantee that my URL will change every minute?**
+- **Is it necessary for me to go to the address to change every time?**
+
+No. If anyone visits your URL,then it will trigger the change based on settings.
+
+- **How to reset the password?**
+
+Unfortunately, there is no option to reset your password at this time. You can create a new account and import your settings, though.
+
+- **How to delete a URL?**
+
+Two Options:
+
+- Replace the URL you want to remove with an existing URL. For example, if you want to delete URL2, replace it with URL3. There will be duplicate URLs; don't worry about them, as they will be removed in the backend. Remember to save your changes. You must have at least two URLs in your settings, or the system will add a random one.
+- Delete the URL/clear the field/ have a blank field, and then use the REMOVE BLANK FIELD button to remove the link and update.
+
+I prefer the second one.
+
+- **How to reset my timing and link starting point?**
+
+When you update your profile, it resets everything. For starting point you have a settings you can use.
+
+- **What is this app does?**
+
+This web application allows you to change your profile picture URL to multiple URLs so that each time someone views your profile picture, they are redirected to a different URL from the list of URLs you have provided. This feature can be used for various purposes, such as having fun with friends or an audience or simply adding variety to your profile picture.
+
+For another instance, you can set a list of URLs with random websites or images and share the link. Each time someone visits the link, they will be surprised with different content every time. This feature can be used to keep your audience engaged and entertained. Because no one will know what will be shown to them.
+ChatGPT generated (¬‿¬)
+
+- **Why isn't it a guarantee for periodicity that my URL will change every minute?**
 
 Because guaranteeing timing for every minute looks inefficient to me.
 
-- **Why isn't there a password reset option?**
+- **Will you add a password reset option?**
 
 Adding a password reset option would add complexity and infrastructure cost. If you lose your password, your only option is to use the import/export settings feature.
 
@@ -96,7 +102,7 @@ To use the import/export option, create a new user first. Then go to the Import/
 
 - **What are the best settings?**
 
-The best settings are Every Minute and 30 Random URLs. Also, remember that URLs cannot be longer than 700 characters.
+The best settings are Every Request and 30 Random URLs.
 
 - **How to report a problem?**
 

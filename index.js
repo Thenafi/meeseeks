@@ -39,6 +39,7 @@ if (Boolean(process.env.NODE_ENV_DEV))
 fastify.register(require("./routes/imex"), { prefix: "/imex" });
 fastify.register(require("./routes/newuser"), { prefix: "/newuser" });
 fastify.register(require("./routes/olduser"), { prefix: "/olduser" });
+fastify.register(require("./routes/random"), { prefix: "/random" });
 fastify.register(require("./routes/settings"), { prefix: "/settings" });
 
 fastify.get("/", async function (request, reply) {
