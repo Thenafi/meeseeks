@@ -6,6 +6,7 @@
     "leveldb",
     "meeseeks",
     "newuser",
-    "olduser"
+    "olduser",
+    "pdebug"
   ]
 }

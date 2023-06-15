@@ -84,9 +84,9 @@ async function routes(fastify, options) {
 
     // //testing settings.
     // // debugger;
-    // user.random = true;
+    // user.random = false;
     // user.periodicity = true;
-    // user.ttl = 0;
+    // user.ttl = 20;
     // ///
 
     if (
@@ -123,8 +123,7 @@ async function routes(fastify, options) {
         const timeNow = new Date();
         const timeDiff = (timeNow - user.lastSettingsUpdate) / 1000;
         const conversionToFrequencyUnit = (timeDiff / user.ttl) | 0;
-        const lastIndexPlusOne = conversionToFrequencyUnit % user.links.length;
-        lastIndex = Math.max(lastIndexPlusOne - 1, 0);
+        lastIndex = conversionToFrequencyUnit % user.links.length;
         link = user.links[lastIndex];
       }
     }
