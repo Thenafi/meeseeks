@@ -61,8 +61,15 @@ async function routes(fastify, options) {
     },
     async handler(req, reply) {
       const { username } = req.params;
-      const { password, linksList, ttl, randomness, periodicity } = req.body;
-      
+      const {
+        password,
+        linksList,
+        ttl,
+        randomness,
+        periodicity,
+        startingindex,
+      } = req.body;
+
       try {
         const user = await userCollection.findOne(
           { username: username.toLowerCase() },
@@ -86,7 +93,15 @@ async function routes(fastify, options) {
             );
 
           user.links = validLinksList;
-          user.lastIndex = 0;
+
+          let useDefinedStartingPoint = parseInt(startingindex) || 1;
+          // because getting the starting index from 1 and validating the input and putting the safe value in the db when stupid things is done.
+          user.lastIndex = Math.max(
+            (useDefinedStartingPoint <= linksList.length
+              ? useDefinedStartingPoint
+              : linksList.length) - 1,
+            0
+          );
           user.ttl = parseInt(ttl);
           user.periodicity = periodicity
             ? convertToBoolean(periodicity)

@@ -33,6 +33,11 @@
     </select>
     <br><br>
 
+    <label for="startingindex">Staring Point:</label>
+    <small> From which URL you would start with? </small>
+    <input type="number" id="startingindex" name="startingindex" min="1" max="<%= links.length %>" value="1">
+    <br><br>
+
     <label for="links">Links:</label>
     <small>Number of link limit is 2 to 200. Current number of links: <%= links.length %></small>
     <br>

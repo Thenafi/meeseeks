@@ -37,6 +37,11 @@ const settingsSchema = {
       minimum: 0,
       maximum: 604800,
     },
+    startingindex: {
+      type: "integer",
+      minimum: 1,
+      maximum: 200,
+    },
     randomness: {
       type: "boolean",
     },
