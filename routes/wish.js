@@ -1,5 +1,5 @@
 const urlCache = require("../utils/cache");
-const { getRandomNumberExcluding, isTimeExpired } = require("../utils/helpers");
+const { getRandomNumberExcluding } = require("../utils/helpers");
 
 const expireBrain = function (
   lastIndexUpdate,
@@ -17,11 +17,11 @@ const expireBrain = function (
     const timeDiffFromLastEntry = (timeNow - lastIndexUpdate) / 1000;
     const remainingTimeAfterCycle =
       (timeDiffFromSettings % ttl) - timeDiffFromLastEntry;
-    if (remainingTimeAfterCycle > 0) return false;
+    if (remainingTimeAfterCycle >= 0) return false;
     return true;
   }
   const timeDiff = (timeNow - lastIndexUpdate) / 1000;
-  if (ttl > timeDiff) return false;
+  if (ttl >= timeDiff) return false;
   return true;
 };
 

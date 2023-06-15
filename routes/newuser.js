@@ -54,6 +54,7 @@ async function routes(fastify, options) {
           });
         }
 
+        const timeNow = new Date();
         const newUser = {
           username: username.toLowerCase(),
           password: await fastify.bcrypt.hash(password),
@@ -69,9 +70,9 @@ async function routes(fastify, options) {
           ttl: 0,
           random: true,
           periodicity: true, //Guarantee Periodicity
-          userCreated: new Date(), // if you need cleanup users
-          lastIndexUpdate: new Date(),
-          lastSettingsUpdate: new Date(),
+          userCreated: timeNow, // if you need cleanup users
+          lastIndexUpdate: timeNow,
+          lastSettingsUpdate: timeNow,
         };
         await userCollection.insertOne(newUser);
         return reply.view("/templates/message.ejs", {

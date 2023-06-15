@@ -49,7 +49,7 @@ const expireBrain = function (
       "Running ExpireBrain remainingTimeAfterCycle = Meaning the time left for the next cycle to start",
       remainingTimeAfterCycle
     );
-    if (remainingTimeAfterCycle > 0) {
+    if (remainingTimeAfterCycle >= 0) {
       console.log(
         "Running ExpireBrain  remainingTimeAfterCycle > 0 and returning false"
       );
@@ -70,7 +70,7 @@ const expireBrain = function (
     timeDiff < ttl
   );
 
-  if (timeDiff < ttl) {
+  if (timeDiff <= ttl) {
     console.log("Running ExpireBrain  timeDiff < ttl and returning false");
 
     return false;

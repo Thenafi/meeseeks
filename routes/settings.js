@@ -75,7 +75,7 @@ async function routes(fastify, options) {
             linkText: "Go back",
           });
         }
-
+        const timeNow = new Date();
         if (await fastify.bcrypt.compare(password, user.password)) {
           let validLinksList = [...new Set(linksList)];
           if (validLinksList.length <= 1)
@@ -92,8 +92,8 @@ async function routes(fastify, options) {
             ? convertToBoolean(periodicity)
             : false;
           user.random = convertToBoolean(randomness);
-          user.lastIndexUpdate = new Date();
-          user.lastSettingsUpdate = new Date();
+          user.lastIndexUpdate = timeNow;
+          user.lastSettingsUpdate = timeNow;
           await userCollection.updateOne(
             { username: username.toLowerCase() },
             { $set: user }
