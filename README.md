@@ -100,6 +100,18 @@ Adding a password reset option would add complexity and infrastructure cost. If 
 
 To use the import/export option, create a new user first. Then go to the Import/Export page and provide your user details. Your old/copyable user data will be added to your new account. Save it with your new account's password.
 
+- **How to use the Bulk Import feature?**
+
+  Instead of adding URLs one by one, you can bulk import them:
+
+  1. Ask ChatGPT (or any AI) to generate URLs in a JSON array format. For example, ask: _"Give me 20 random image URLs in a JSON array."_
+  2. Copy the JSON array it gives you, e.g. `["https://example.com/img1.jpg", "https://example.com/img2.jpg"]`.
+  3. Go to your Settings page and expand the **📦 Bulk Import URLs** section.
+  4. Paste the JSON array into the text box.
+  5. Click **Import URLs** to _add_ them to your existing links, or **Replace All URLs** to _replace_ all existing links with the pasted ones.
+
+  The importer validates each URL and skips any that are invalid, empty, or too long.
+
 - **What are the best settings?**
 
 The best settings are Every Request and 30 Random URLs.

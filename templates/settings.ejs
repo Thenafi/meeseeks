@@ -58,7 +58,19 @@
     <button type="button" id="remove-link">Remove Blank Fields</button>
     <br><br>
 
-
+    <details id="bulk-import-section">
+        <summary style="cursor:pointer; font-weight:bold;">&#128230; Bulk Import URLs</summary>
+        <small>Paste a JSON array of URLs. e.g. <code>["https://example.com/1.jpg", "https://example.com/2.jpg"]</code></small>
+        <br>
+        <small>Tip: Ask ChatGPT to generate a list of URLs in JSON array format, then paste it here.</small>
+        <br><br>
+        <textarea id="bulk-urls" rows="6" style="min-width:95%; font-family:monospace;" placeholder='["https://example.com/img1.jpg", "https://example.com/img2.jpg"]'></textarea>
+        <br>
+        <button type="button" id="bulk-import-btn">Import URLs</button>
+        <button type="button" id="bulk-replace-btn">Replace All URLs</button>
+        <small id="bulk-import-status" style="margin-left:8px;"></small>
+    </details>
+    <br>
 
     <button style="color: green" type="submit">Update</button>
 </form>
@@ -137,5 +149,80 @@
     ttlElement.addEventListener('change', forcingPeriodicity);
     randomElement.addEventListener('change', forcingPeriodicity);
 
+    // Bulk import logic
+    const maxUrlLength = parseInt("<%= maxUrlLength %>");
+    const maxLinks = 200;
+    const bulkImportBtn = document.getElementById('bulk-import-btn');
+    const bulkReplaceBtn = document.getElementById('bulk-replace-btn');
+    const bulkUrlsTextarea = document.getElementById('bulk-urls');
+    const bulkStatus = document.getElementById('bulk-import-status');
+
+    function parseBulkUrls() {
+        const raw = bulkUrlsTextarea.value.trim();
+        if (!raw) { bulkStatus.textContent = '⚠ Paste a JSON array first.'; return null; }
+        let urls;
+        try {
+            urls = JSON.parse(raw);
+        } catch (e) {
+            bulkStatus.textContent = '❌ Invalid JSON. Make sure it is a valid JSON array.';
+            return null;
+        }
+        if (!Array.isArray(urls)) { bulkStatus.textContent = '❌ Must be a JSON array.'; return null; }
+        // Filter and validate
+        const valid = [];
+        const skipped = [];
+        urls.forEach(function(u, i) {
+            if (typeof u !== 'string') { skipped.push('#' + (i+1) + ' (not a string)'); return; }
+            u = u.trim();
+            if (!u) { skipped.push('#' + (i+1) + ' (empty)'); return; }
+            if (u.length > maxUrlLength) { skipped.push('#' + (i+1) + ' (too long)'); return; }
+            try { new URL(u); } catch(e) { skipped.push('#' + (i+1) + ' (invalid URL)'); return; }
+            valid.push(u);
+        });
+        if (valid.length === 0) { bulkStatus.textContent = '❌ No valid URLs found.'; return null; }
+        return { valid: valid, skipped: skipped };
+    }
+
+    function addUrlField(url) {
+        const input = document.createElement('input');
+        input.type = 'url';
+        input.name = 'linksList';
+        input.id = 'link' + linksContainer.getElementsByTagName('input').length;
+        input.maxLength = maxUrlLength;
+        input.style.width = '100%';
+        input.required = true;
+        input.value = url;
+        linksContainer.appendChild(input);
+        linksContainer.appendChild(document.createElement('br'));
+    }
+
+    bulkImportBtn.addEventListener('click', function() {
+        const result = parseBulkUrls();
+        if (!result) return;
+        const currentCount = linksContainer.getElementsByTagName('input').length;
+        const canAdd = maxLinks - currentCount;
+        if (canAdd <= 0) { bulkStatus.textContent = '❌ Already at ' + maxLinks + ' link limit.'; return; }
+        const toAdd = result.valid.slice(0, canAdd);
+        toAdd.forEach(function(url) { addUrlField(url); });
+        let msg = '✅ Added ' + toAdd.length + ' URL(s).';
+        if (toAdd.length < result.valid.length) msg += ' ' + (result.valid.length - toAdd.length) + ' skipped (limit).';
+        if (result.skipped.length) msg += ' Skipped: ' + result.skipped.join(', ');
+        bulkStatus.textContent = msg;
+        bulkUrlsTextarea.value = '';
+    });
+
+    bulkReplaceBtn.addEventListener('click', function() {
+        const result = parseBulkUrls();
+        if (!result) return;
+        if (!confirm('This will replace ALL existing URLs. Continue?')) return;
+        // Clear existing links
+        linksContainer.innerHTML = '';
+        const toAdd = result.valid.slice(0, maxLinks);
+        toAdd.forEach(function(url) { addUrlField(url); });
+        let msg = '✅ Replaced with ' + toAdd.length + ' URL(s).';
+        if (result.skipped.length) msg += ' Skipped: ' + result.skipped.join(', ');
+        bulkStatus.textContent = msg;
+        bulkUrlsTextarea.value = '';
+    });
 
 </script>

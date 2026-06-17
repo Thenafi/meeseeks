@@ -88,7 +88,7 @@ async function routes(fastify, options) {
             linkText: "Go back",
           });
         } else {
-          console.log(err);
+          console.log(error);
           return reply.view("/templates/message.ejs", {
             message: "Internal server error. Report admin",
             url: "./",
